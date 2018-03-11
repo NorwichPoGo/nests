@@ -1,0 +1,11 @@
+title: Pokémon Go Norwich
+description: ''
+
+# Global
+timezone: Europe/London
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - README.md
