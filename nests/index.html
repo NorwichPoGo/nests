@@ -1,40 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Norwich Nests</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="nests.css">
-  </head>
-
-  <body>
-    <div class="wrapper">
-      <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Norwich Nests</a>
-          </div>
-          <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav"></ul>
-          </div>
-        </div>
-      </nav>
-
-      <div id="map"></div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
-    <script src="nests.js"></script>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAatqa6e66hNt1xIy6S7wLW2xmduoPnBF0&amp;callback=initMap&amp;libraries=places,geometry"></script>
-  </body>
-</html>
+---
+layout: default
+title: Nests
+max_scale: 1
+min_scale: 1
+user_scalable: false
+minimal_ui: true
+css:
+  - /assets/css/nests.css
+scripts:
+  - https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.js
+  - https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js
+  - /assets/js/nests.js
+  - https://maps.googleapis.com/maps/api/js?key=AIzaSyAatqa6e66hNt1xIy6S7wLW2xmduoPnBF0&amp;callback=initMap&amp;libraries=places,geometry
+skip_container: true
+---
+<div id="map"></div>

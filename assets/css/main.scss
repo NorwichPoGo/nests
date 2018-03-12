@@ -1,0 +1,23 @@
+---
+---
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  padding-top: 50px;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #eeeeee;
+}
+
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-brand:focus {
+  color: #fff;
+  background-color: transparent;
+}

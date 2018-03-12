@@ -8,6 +8,10 @@ const migrationDates = [
 const pokemonImagesUrl = 'https://raw.githubusercontent.com/pogo-excalibur' +
                          '/images/master/pogo';
 
+const nestsFile = '/data/nests.json';
+
+const nestMigrationsDir = '/data/nest-migrations';
+
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
     center: {
@@ -40,7 +44,7 @@ function initMap() {
 }
 
 function loadNestData() {
-  return Promise.resolve($.getJSON('nests.json'))
+  return Promise.resolve($.getJSON(nestsFile))
     .then(function (nestData) {
       $.each(nestData, function (nestId, nest) {
         nest.center = coordinateToLatLng(nest.center);
@@ -78,7 +82,8 @@ function loadMigrations() {
 }
 
 function loadMigrationData(date) {
-  return Promise.resolve($.getJSON(`migrations/${dateToString(date)}.json`));
+  const migrationFile = `${nestMigrationsDir}/${dateToString(date)}.json`;
+  return Promise.resolve($.getJSON(migrationFile));
 }
 
 function drawNest(map, nest) {
