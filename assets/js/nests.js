@@ -10,7 +10,7 @@ const pokemonImagesUrl = 'https://raw.githubusercontent.com/pogo-excalibur' +
 
 const nestsFile = '/data/nests.json';
 
-const nestMigrationsDir = '/data/nest-migrations';
+const nestMigrationsDir = '/data/nest_migrations';
 
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
