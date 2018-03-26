@@ -11,6 +11,8 @@ const pokemonImagesUrl = 'https://raw.githubusercontent.com/pogo-excalibur' +
 
 const nestsFile = '/data/nests.json';
 
+const manualNestsFile = '/data/manual_nests.json';
+
 const nestMigrationsDir = '/data/nest_migrations';
 
 function initMap() {
@@ -46,6 +48,12 @@ function initMap() {
 
 function loadNestData() {
   return Promise.resolve($.getJSON(nestsFile))
+    .then(function (nestData) {
+      return Promise.resolve($.getJSON(manualNestsFile))
+        .then(function (manualNestData) {
+          return Object.assign(nestData, manualNestData);;
+        });
+    })
     .then(function (nestData) {
       $.each(nestData, function (nestId, nest) {
         nest.center = coordinateToLatLng(nest.center);
@@ -180,13 +188,24 @@ function nestLabel(nest) {
       </div>`;
   }).join('\n');
 
+  let spawnpointCount
+  if (nest.spawnpoints) {
+    if (nest.spawnpoints.length > 1) {
+      spawnpointCount = `${nest.spawnpoints.length} spawnpoints`;
+    } else {
+      spawnpointCount = `${nest.spawnpoints.length} spawnpoint`;
+    }
+  } else {
+    spawnpointCount = 'Number of spawnpoints unknown';
+  }
+
   let content = `
     <div class="nest-label">
       <div class="nest-label-name">
         <b>${nest.name}</b>
       </div>
       <div class="nest-label-spawnpoints">
-        (${nest.spawnpoints.length} spawnpoint${(nest.spawnpoints.length > 1) ? 's' : ''})
+        (${spawnpointCount})
       </div>
       <br/>
       ${allNestingPokemon}
