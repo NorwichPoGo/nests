@@ -16,6 +16,29 @@ const manualNestsFile = '/data/manual_nests.json';
 
 const nestMigrationsDir = '/data/nest_migrations';
 
+/**
+ * Modified from https://stackoverflow.com/questions/19491336 .
+ */
+function urlParameter(parameterName) {
+  const parameterString = decodeURIComponent(window.location.search.substring(1));
+  const parameters = parameterString.split('&');
+
+  let parameterValue;
+  $.each(parameters, function (index, param) {
+    const paramParts = param.split('=');
+    const paramName = paramParts[0];
+    const paramValue = paramParts[1];
+
+    if ((paramName == parameterName)
+        && (paramValue !== undefined)) {
+      parameterValue = paramValue;
+      return false;
+    }
+  });
+
+  return parameterValue;
+};
+
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
     center: {
@@ -39,7 +62,50 @@ function initMap() {
     }
   });
 
+  initNests(map);
+}
+
+function initNests(map) {
   loadNestData()
+    /* If a nest is given as a URL parameter then zoom to it. */
+    .then(function (nestData) {
+      const centerNestName = urlParameter('nest');
+      if (centerNestName) {
+        let centerNest;
+        $.each(nestData, function (nestId, nest) {
+          if (nest.permalinkName == centerNestName) {
+            centerNest = nest;
+            return false;
+          }
+        });
+
+        if (centerNest) {
+          zoomToNest(map, centerNest);
+        }
+      }
+
+      return nestData;
+    })
+    .then(function (nestData) {
+      return loadMigrationData()
+        .then(function (allMigrationData) {
+          $.each(allMigrationData, function (index, migrationData) {
+            const date = migrationDates[index];
+
+            $.each(nestData, function (nestId, nest) {
+              if (migrationData[nestId]) {
+                if (!nest.migrations) {
+                  nest.migrations = [];
+                }
+
+                nest.migrations[date] = migrationData[nestId];
+              }
+            });
+          });
+
+          return nestData;
+        });
+    })
     .then(function (nestData) {
       $.each(nestData, function (nestId, nest) {
         drawNest(map, nest);
@@ -62,38 +128,26 @@ function loadNestData() {
         nest.region = $.map(nest.region, function (coord) {
           return coordinateToLatLng(coord);
         });
+
+        nest.permalinkName = nest.name
+            .replace(/[^\w]/g, '')
+            .toLowerCase();
       });
 
-      return loadMigrations()
-        .then(function (allMigrationData) {
-          $.each(allMigrationData, function (index, migrationData) {
-            const date = migrationDates[index];
-
-            $.each(nestData, function (nestId, nest) {
-              if (migrationData[nestId]) {
-                if (!nest.migrations) {
-                  nest.migrations = [];
-                }
-
-                nest.migrations[date] = migrationData[nestId];
-              }
-            });
-          });
-
-          return nestData;
-        });
+      return nestData;
     });
 }
 
-function loadMigrations() {
+function loadMigrationData(nestData) {
   return Promise.all($.map(migrationDates, function (date) {
-    return loadMigrationData(date);
-  }));
+    const migrationFile = `${nestMigrationsDir}/${dateToString(date)}.json`;
+    return Promise.resolve($.getJSON(migrationFile));
+  }))
 }
 
-function loadMigrationData(date) {
-  const migrationFile = `${nestMigrationsDir}/${dateToString(date)}.json`;
-  return Promise.resolve($.getJSON(migrationFile));
+function zoomToNest(map, nest) {
+  map.panTo(nest.center);
+  map.setZoom(17);
 }
 
 function drawNest(map, nest) {
@@ -169,8 +223,6 @@ function nestIcon(nest) {
       scaledSize: new google.maps.Size(34, 34),
       anchor: new google.maps.Point(17, 17)
     };
-  } else {
-    return;
   }
 }
 
@@ -189,6 +241,9 @@ function nestLabel(nest) {
       </div>`;
   }).join('\n');
 
+  const baseURL = location.protocol + '//' + location.host + location.pathname;
+  const permaLink = `${baseURL}?nest=${nest.permalinkName}`;
+
   let spawnpointCount
   if (nest.spawnpoints) {
     if (nest.spawnpoints.length > 1) {
@@ -204,6 +259,7 @@ function nestLabel(nest) {
     <div class="nest-label">
       <div class="nest-label-name">
         <b>${nest.name}</b>
+        <a href="${permaLink}"><span class="fas fa-link"></span></a>
       </div>
       <div class="nest-label-spawnpoints">
         (${spawnpointCount})
@@ -222,8 +278,6 @@ function nestMigrationData(nest, migration) {
       nest.migrations[migration] &&
       (nest.migrations[migration]['id'] > 0)) {
     return nest.migrations[migration];
-  } else {
-    return;
   }
 }
 
