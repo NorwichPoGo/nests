@@ -7,3 +7,4 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 # gem "rails"
 
 gem 'jekyll', '3.7.3'
+gem 'jekyll-redirect-from', '0.13.0'

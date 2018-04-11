@@ -2,6 +2,12 @@ title: Pokémon Go Norwich
 description: ''
 timezone: Europe/London
 
+plugins:
+  - jekyll-redirect-from
+
+whitelist:
+  - jekyll-redirect-from
+
 exclude:
   - Gemfile
   - Gemfile.lock
