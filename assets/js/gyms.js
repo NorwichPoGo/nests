@@ -52,7 +52,7 @@ const Settings = {
     },
     zoomLevel: {
       type: 'float',
-      defaultValue: 17
+      defaultValue: 13
     }
   },
   get: function(settingName) {
