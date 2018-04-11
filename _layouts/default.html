@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title>{{ page.title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1{% if page.max_scale %}, maximum-scale={{ page.max_scale }}{% endif %}{% if page.min_scale %}, minimum-scale={{ page.min_scale }}{% endif %}{% if page.user_scalable == false %}, user-scalable=no{% endif %}{% if page.minimal_ui %}, minimal-ui{% endif %}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/bootstrap-switch.min.css">
     <link rel="stylesheet" href="/assets/css/main.css">
     {%- if page.css -%}
     {% for css in page.css %}
@@ -19,7 +20,8 @@
     <![endif]-->
   </head>
   <body>
-    {%- capture navbar -%}{%- include nav.html -%}{%- endcapture -%}
+    {%- capture navbar_file -%}{{ page.navbar | default: 'nav.html' }}{%- endcapture -%}
+    {%- capture navbar -%}{%- include {{ navbar_file }} -%}{%- endcapture -%}
     {%- assign navbar_lines = navbar | newline_to_br | strip_newlines | split: '<br />' -%}
     {% for line in navbar_lines %}
     {{ line }}
@@ -40,8 +42,9 @@
     {% endif %}
 
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous" defer></script>
+    <script src="/assets/js/bootstrap-switch.min.js"></script>
     {%- if page.scripts -%}
     {% for script in page.scripts %}
     <script src="{{ script | replace: '&quot;', '' }}"></script>
