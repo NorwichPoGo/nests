@@ -1,0 +1,16 @@
+#map {
+  position: absolute;
+  top: 50px;
+  bottom: 0px;
+  width: 100%;
+}
+
+.feature-label {
+  font-size: 10pt;
+  max-width: 250px;
+}
+
+.feature-label-name {
+  font-size: 12pt;
+  padding-bottom: 4px;
+}

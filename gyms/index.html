@@ -1,0 +1,41 @@
+---
+layout: default
+title: Gyms & Pokestops
+redirect_from:
+  - /pokestops
+  - /portals
+max_scale: 1
+min_scale: 1
+user_scalable: false
+minimal_ui: true
+navbar: nav_with_settings.html
+css:
+  - /assets/css/gyms.css
+scripts:
+  - https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.js
+  - https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js
+  - /assets/js/gyms.js
+  - https://maps.googleapis.com/maps/api/js?key=AIzaSyAatqa6e66hNt1xIy6S7wLW2xmduoPnBF0&amp;callback=initMap&amp;libraries=places,geometry
+skip_container: true
+---
+<div id="map"></div>
+
+<div class="settings-wrapper">
+  <div class="collapse settings panel panel-default">
+    <div class="panel-heading text-center">Settings</div>
+    <div class="panel-body">
+      <div class="form-group toggle-gyms-wrapper">
+        <input id="toggle-gyms" type="checkbox" name="toggle-gyms">
+        <label for="toggle-gyms">Gyms</label>
+      </div>
+      <div class="form-group toggle-pokestops-wrapper">
+        <input id="toggle-pokestops" type="checkbox" name="toggle-pokestops">
+        <label for="toggle-pokestops">Pokestops</label>
+      </div>
+      <div class="form-group toggle-portals-wrapper">
+        <input id="toggle-portals" type="checkbox" name="toggle-portals">
+        <label for="toggle-portals">Portals</label>
+      </div>
+    </div>
+  </div>
+</div>
