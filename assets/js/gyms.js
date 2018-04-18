@@ -410,6 +410,8 @@ function zoomToFeature(map, feature, zoom) {
 }
 
 function drawFeature(map, feature) {
+  const anchorX = (feature.type == 'gym') ? 22 : 15;
+
   let featureMarker;
   if (featureMarkerIcons[feature.type]) {
     featureMarker = new google.maps.Marker({
@@ -417,7 +419,7 @@ function drawFeature(map, feature) {
       icon: {
         url: featureMarkerIcons[feature.type],
         scaledSize: new google.maps.Size(30, 30),
-        anchor: new google.maps.Point(15, 15)
+        anchor: new google.maps.Point(anchorX, 30)
       },
       zIndex: 20
     });
