@@ -606,7 +606,7 @@ function drawS2Cell(map, s2Cell) {
     strokeOpacity: 0.75,
     strokeWeight: 2 + ((20 - s2Cell.level) / 4),
     fillColor: color,
-    fillOpacity: 0.25,
+    fillOpacity: 0,
     zIndex: 120 - s2Cell.level
   });
 }
