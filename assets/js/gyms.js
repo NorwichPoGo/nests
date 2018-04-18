@@ -163,6 +163,55 @@ function initMap() {
   initSettings(map);
 }
 
+function initS2Cells(map) {
+  map.drawS2Cells = function (newS2Cells) {
+    const oldS2Cells = (map.s2Cells || []).slice(0, -200);
+    $.each(oldS2Cells, function (index, s2Cell) {
+      s2Cell.hide();
+    });
+
+    const s2Cells = (map.s2Cells || []).slice(-200);
+    $.merge(s2Cells, newS2Cells);
+
+    $.each(s2Cells, function (index, s2Cell) {
+      if (s2Cell.shouldShow()) {
+        if (!s2Cell.isShown()) {
+          s2Cell.draw(map);
+          s2Cell.show(map);
+        }
+      } else {
+        s2Cell.hide();
+      }
+    });
+
+    map.s2Cells = s2Cells;
+  };
+
+  map.updateS2Cells = function () {
+    map.cancelS2CellUpdate();
+
+    map.pendingS2CellUpdate = setTimeout(function () {
+      const newS2Cells = loadS2Cells(map);
+      map.drawS2Cells(newS2Cells);
+    }, 800);
+  }
+
+  map.cancelS2CellUpdate = function () {
+    if (map.pendingS2CellUpdate) {
+      clearTimeout(map.pendingS2CellUpdate);
+    }
+  }
+
+  map.shouldDisplayCellLevel = function (level) {
+    let cellLevelLimit = Settings.get('s2CellLimits')[level];
+    if (isMobile() && (cellLevelLimit > 0)) cellLevelLimit -= 1;
+    return map.getZoom() >= cellLevelLimit;
+  }
+
+  google.maps.event.addListener(map, 'idle', map.updateS2Cells);
+  google.maps.event.addListener(map, 'bounds_changed', map.cancelS2CellUpdate);
+}
+
 function initFeatures(map) {
   map.drawFeatures = function () {
     $.each(map.features, function (index, feature) {
@@ -193,77 +242,6 @@ function initFeatures(map) {
       map.features = features;
       map.drawFeatures();
     });
-}
-
-function initS2Cells(map) {
-  map.drawS2Cells = function (newS2Cells) {
-    const oldS2Cells = map.s2Cells;
-    const oldS2CellIds = $.map(oldS2Cells, function (s2Cell) {
-      return s2Cell.id;
-    });
-    const newS2CellIds = $.map(newS2Cells, function (s2Cell) {
-      return s2Cell.id;
-    });
-
-    const cellsToShow = [];
-    const cellsToRemove = [];
-
-    $.each(oldS2Cells, function (index, oldS2Cell) {
-      let stillShown = false;
-      $.each(newS2CellIds, function (index, newS2CellId) {
-        if (newS2CellId.equals(oldS2Cell.id)) {
-          stillShown = true;
-          return false;
-        }
-      });
-
-      if (stillShown) {
-        cellsToShow.push(oldS2Cell);
-      } else {
-        cellsToRemove.push(oldS2Cell);
-      }
-    });
-
-    $.each(newS2Cells, function (index, newS2Cell) {
-      let alreadyExists = false;
-      $.each(oldS2CellIds, function (index, oldS2CellId) {
-        if (oldS2CellId.equals(newS2Cell.id)) {
-          alreadyExists = true;
-          return false;
-        }
-      });
-
-      if (alreadyExists) {
-        cellsToRemove.push(newS2Cell);
-      } else {
-        cellsToShow.push(newS2Cell);
-      }
-    });
-
-    $.each(cellsToRemove, function (index, s2Cell) {
-      s2Cell.hide();
-    });
-
-    $.each(cellsToShow, function (index, s2Cell) {
-      if (s2Cell.shouldShow()) {
-        if (!s2Cell.isShown()) {
-          s2Cell.draw(map);
-          s2Cell.show(map);
-        }
-      } else {
-        s2Cell.hide();
-      }
-    });
-
-    map.s2Cells = cellsToShow;
-  };
-
-  map.updateS2Cells = function () {
-    const newS2Cells = loadS2Cells(map);
-    map.drawS2Cells(newS2Cells);
-  }
-
-  google.maps.event.addListener(map, 'idle', map.updateS2Cells);
 }
 
 function initSettings(map) {
@@ -306,7 +284,7 @@ function initSettings(map) {
     let s2CellLevelOptions = '';
     for (let level = 1; level <= 20; ++level) {
       let optionTag = '';
-      if (map.getZoom() >= Settings.get('s2CellLimits')[level]) {
+      if (map.shouldDisplayCellLevel(level)) {
         optionTag += '<option value="' + level + '">';
         optionTag += level;
       } else {
@@ -535,9 +513,7 @@ function loadS2Cells(map) {
 
   const s2Cells = []
   $.each(Settings.get('s2Cells'), function (index, level) {
-    if (map.getZoom() < Settings.get('s2CellLimits')[level]) {
-      return;
-    }
+    if (!map.shouldDisplayCellLevel(level)) return;
 
     const regionCoverer = new S2.S2RegionCoverer();
     regionCoverer.setMinLevel(level);
@@ -562,7 +538,7 @@ function loadS2Cells(map) {
 
       s2Cell.shouldShow = function () {
         return (($.inArray('' + s2Cell.level, Settings.get('s2Cells')) > -1) &&
-                (map.getZoom() >= Settings.get('s2CellLimits')[s2Cell.level]));
+                (map.shouldDisplayCellLevel(s2Cell.level)));
       };
 
       s2Cell.isShown = function () {
@@ -613,4 +589,9 @@ function drawS2Cell(map, s2Cell) {
 
 function coordinateToLatLng(coord) {
   return new google.maps.LatLng(coord[0], coord[1]);
+}
+
+function isMobile() {
+  const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  return mobileRegex.test(navigator.userAgent);
 }
