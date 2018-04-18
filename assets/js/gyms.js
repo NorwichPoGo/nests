@@ -43,6 +43,60 @@ const Settings = {
       type: 'boolean',
       defaultValue: false
     },
+    s2Cells: {
+      type: 'json',
+      defaultValue: []
+    },
+    s2CellColors: {
+      type: 'json',
+      defaultValue: {
+        '1': '#FF6F00',
+        '2': '#F57F17',
+        '3': '#827717',
+        '4': '#33691E',
+        '5': '#1B5E20',
+        '6': '#004D40',
+        '7': '#006064',
+        '8': '#01579B',
+        '9': '#0D47A1',
+        '10': '#1A237E',
+        '11': '#6A1B9A',
+        '12': '#AD1457',
+        '13': '#b71c1c',
+        '14': '#BF360C',
+        '15': '#FF7043',
+        '16': '#FFCA28',
+        '17': '#FDD835',
+        '18': '#00796B',
+        '19': '#0288D1',
+        '20': '#64B5F6'
+      }
+    },
+    s2CellLimits: {
+      type: 'json',
+      defaultValue: {
+        '1': 0,
+        '2': 0,
+        '3': 3,
+        '4': 4,
+        '5': 5,
+        '6': 6,
+        '7': 7,
+        '8': 8,
+        '9': 9,
+        '10': 10,
+        '11': 11,
+        '12': 12,
+        '13': 13,
+        '14': 14,
+        '15': 15,
+        '16': 16,
+        '17': 17,
+        '18': 18,
+        '19': 19,
+        '20': 20
+      }
+    },
     mapCenter: {
       type: 'json',
       defaultValue: {
@@ -104,6 +158,12 @@ function initMap() {
     }
   });
 
+  initS2Cells(map);
+  initFeatures(map);
+  initSettings(map);
+}
+
+function initFeatures(map) {
   map.drawFeatures = function () {
     $.each(map.features, function (index, feature) {
       /* Don't show duplicate features (e.g. both a pokestop and a portal)
@@ -128,16 +188,82 @@ function initMap() {
     });
   };
 
-  initFeatures(map);
-  initSettings(map);
-}
-
-function initFeatures(map) {
   loadFeatureData()
     .then(function (features) {
       map.features = features;
       map.drawFeatures();
     });
+}
+
+function initS2Cells(map) {
+  map.drawS2Cells = function (newS2Cells) {
+    const oldS2Cells = map.s2Cells;
+    const oldS2CellIds = $.map(oldS2Cells, function (s2Cell) {
+      return s2Cell.id;
+    });
+    const newS2CellIds = $.map(newS2Cells, function (s2Cell) {
+      return s2Cell.id;
+    });
+
+    const cellsToShow = [];
+    const cellsToRemove = [];
+
+    $.each(oldS2Cells, function (index, oldS2Cell) {
+      let stillShown = false;
+      $.each(newS2CellIds, function (index, newS2CellId) {
+        if (newS2CellId.equals(oldS2Cell.id)) {
+          stillShown = true;
+          return false;
+        }
+      });
+
+      if (stillShown) {
+        cellsToShow.push(oldS2Cell);
+      } else {
+        cellsToRemove.push(oldS2Cell);
+      }
+    });
+
+    $.each(newS2Cells, function (index, newS2Cell) {
+      let alreadyExists = false;
+      $.each(oldS2CellIds, function (index, oldS2CellId) {
+        if (oldS2CellId.equals(newS2Cell.id)) {
+          alreadyExists = true;
+          return false;
+        }
+      });
+
+      if (alreadyExists) {
+        cellsToRemove.push(newS2Cell);
+      } else {
+        cellsToShow.push(newS2Cell);
+      }
+    });
+
+    $.each(cellsToRemove, function (index, s2Cell) {
+      s2Cell.hide();
+    });
+
+    $.each(cellsToShow, function (index, s2Cell) {
+      if (s2Cell.shouldShow()) {
+        if (!s2Cell.isShown()) {
+          s2Cell.draw(map);
+          s2Cell.show(map);
+        }
+      } else {
+        s2Cell.hide();
+      }
+    });
+
+    map.s2Cells = cellsToShow;
+  };
+
+  map.updateS2Cells = function () {
+    const newS2Cells = loadS2Cells(map);
+    map.drawS2Cells(newS2Cells);
+  }
+
+  google.maps.event.addListener(map, 'idle', map.updateS2Cells);
 }
 
 function initSettings(map) {
@@ -168,13 +294,49 @@ function initSettings(map) {
     }
   );
 
-  google.maps.event.addListener(map, 'idle', function() {
+  google.maps.event.addListener(map, 'idle', function () {
     Settings.set('mapCenter', {
       lat: map.getCenter().lat(),
       lng: map.getCenter().lng()
     });
     Settings.set('zoomLevel', map.getZoom());
   });
+
+  function setS2CellLevelOptions() {
+    let s2CellLevelOptions = '';
+    for (let level = 1; level <= 20; ++level) {
+      let optionTag = '';
+      if (map.getZoom() >= Settings.get('s2CellLimits')[level]) {
+        optionTag += '<option value="' + level + '">';
+        optionTag += level;
+      } else {
+        optionTag += '<option value="' + level + '"'+ 'disabled' + '>';
+        optionTag += level + ' - zoom in';
+      }
+      optionTag += '</option>';
+
+      s2CellLevelOptions += optionTag;
+    }
+
+    $("[name='select-s2-cells']").html(s2CellLevelOptions);
+    $("[name='select-s2-cells']").selectpicker('val', Settings.get('s2Cells'));
+    $("[name='select-s2-cells']").selectpicker('refresh')
+  }
+
+  setS2CellLevelOptions();
+
+  google.maps.event.addListener(map, 'idle', setS2CellLevelOptions);
+
+  $("[name='select-s2-cells']").selectpicker({
+    size: 5,
+    dropupAuto: false
+  });
+  $("[name='select-s2-cells']").on('changed.bs.select', function () {
+    Settings.set('s2Cells', $(this).val() || []);
+    map.updateS2Cells();
+  });
+
+  $('.select-s2-cells-wrapper .bs-select-all').prop('disabled', true);
 }
 
 function loadFeatureData() {
@@ -256,11 +418,13 @@ function drawFeature(map, feature) {
         url: featureMarkerIcons[feature.type],
         scaledSize: new google.maps.Size(30, 30),
         anchor: new google.maps.Point(15, 15)
-      }
+      },
+      zIndex: 20
     });
   } else {
     featureMarker = new google.maps.Marker({
-      position: feature.location
+      position: feature.location,
+      zIndex: 20
     });
   }
 
@@ -353,6 +517,95 @@ function addLabelActions(map, feature) {
 
   feature.label.addListener('closeclick', function () {
     feature.label.isOpen = false;
+  });
+}
+
+function loadS2Cells(map) {
+  if (!map.getBounds()) return [];
+
+  const mapBounds = map.getBounds();
+  const swBound = mapBounds.getSouthWest();
+  const neBound = mapBounds.getNorthEast();
+
+  const southWest = S2.S2LatLng.fromDegrees(swBound.lat(), swBound.lng());
+  const northEast = S2.S2LatLng.fromDegrees(neBound.lat(), neBound.lng());
+  const screenRegion = S2.S2LatLngRect.fromLatLng(southWest, northEast);
+
+  const s2Cells = []
+  $.each(Settings.get('s2Cells'), function (index, level) {
+    if (map.getZoom() < Settings.get('s2CellLimits')[level]) {
+      return;
+    }
+
+    const regionCoverer = new S2.S2RegionCoverer();
+    regionCoverer.setMinLevel(level);
+    regionCoverer.setMaxLevel(level);
+    regionCoverer.setMaxCells(50);
+
+    const s2CellIds = regionCoverer.getCoveringCells(screenRegion);
+    $.each(s2CellIds, function (index, s2CellId) {
+      const s2Cell = new S2.S2Cell(s2CellId);
+
+      s2Cell.hide = function () {
+        if (s2Cell.polygon) {
+          s2Cell.polygon.setMap(null);
+        }
+      };
+
+      s2Cell.show = function (map) {
+        if (s2Cell.polygon) {
+          s2Cell.polygon.setMap(map);
+        }
+      };
+
+      s2Cell.shouldShow = function () {
+        return (($.inArray('' + s2Cell.level, Settings.get('s2Cells')) > -1) &&
+                (map.getZoom() >= Settings.get('s2CellLimits')[s2Cell.level]));
+      };
+
+      s2Cell.isShown = function () {
+        return s2Cell.polygon && s2Cell.polygon.map;
+      };
+
+      s2Cell.draw = function (map) {
+        if (!s2Cell.polygon) {
+          drawS2Cell(map, s2Cell);
+        }
+      };
+
+      s2Cells.push(s2Cell);
+    });
+  });
+
+  return s2Cells;
+}
+
+function drawS2Cell(map, s2Cell) {
+  function s2PointToGMapsLatLng(s2Point) {
+    const s2LatLng = S2.S2LatLng.fromPoint(s2Point);
+    return {
+      lat: s2LatLng.latDegrees.toNumber(),
+      lng: s2LatLng.lngDegrees.toNumber()
+    }
+  }
+
+  const verticies = [
+    s2PointToGMapsLatLng(s2Cell.getVertex(0)),
+    s2PointToGMapsLatLng(s2Cell.getVertex(1)),
+    s2PointToGMapsLatLng(s2Cell.getVertex(2)),
+    s2PointToGMapsLatLng(s2Cell.getVertex(3))
+  ];
+
+  const color = Settings.get('s2CellColors')[s2Cell.level];
+
+  s2Cell.polygon = new google.maps.Polygon({
+    paths: verticies,
+    strokeColor: color,
+    strokeOpacity: 0.75,
+    strokeWeight: 2 + ((20 - s2Cell.level) / 4),
+    fillColor: color,
+    fillOpacity: 0.25,
+    zIndex: 120 - s2Cell.level
   });
 }
 
