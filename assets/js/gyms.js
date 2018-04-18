@@ -143,9 +143,9 @@ function initMap() {
     center: Settings.get('mapCenter'),
     zoom: Settings.get('zoomLevel'),
     gestureHandling: 'greedy',
-    fullscreenControl: true,
-    streetViewControl: false,
-    mapTypeControl: false,
+    fullscreenControl: false,
+    streetViewControl: true,
+    mapTypeControl: true,
     clickableIcons: false,
     mapTypeControlOptions: {
       style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
