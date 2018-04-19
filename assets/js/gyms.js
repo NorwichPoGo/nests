@@ -226,6 +226,10 @@ function initFeatures(map) {
 }
 
 function initSettings(map) {
+  google.maps.event.addListener(map, 'click', function () {
+    $('.settings').collapse('hide');
+  });
+
   $('[name="toggle-gyms"]').bootstrapSwitch();
   $('[name="toggle-gyms"]').bootstrapSwitch('state', Settings.get('showGyms'));
   $('[name="toggle-gyms"]').on('switchChange.bootstrapSwitch',
