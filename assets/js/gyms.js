@@ -411,14 +411,16 @@ function drawFeature(map, feature) {
 }
 
 function gymLabel(gym) {
-  const gymName = gym.name || 'Gym';
+  const name = gym.name || 'Gym';
+  const description = '' + (gym.description || '');
+
   let content = `
     <div class="feature-label">
       <div class="feature-label-name">
-        <b>${gymName}</b>
+        <b>${name}</b>
       </div>
       <div class="feature-label-description">
-        ${gym.description || ''}
+        ${description.replace(/\\n/gi, '<br />')}
       </div>
     </div>`;
 
@@ -429,14 +431,16 @@ function gymLabel(gym) {
 }
 
 function pokestopLabel(pokestop) {
-  const pokestopName = pokestop.name || 'Pokestop';
+  const name = pokestop.name || 'Pokestop';
+  const description = pokestop.description || '';
+
   let content = `
     <div class="feature-label">
       <div class="feature-label-name">
-        <b>${pokestopName}</b>
+        <b>${name}</b>
       </div>
       <div class="feature-label-description">
-        ${pokestop.description || ''}
+        ${description.replace(/\\n/gi, '<br />')}
       </div>
     </div>`;
 
@@ -447,14 +451,16 @@ function pokestopLabel(pokestop) {
 }
 
 function portalLabel(portal) {
-  const portalName = portal.name || 'Portal';
+  const name = portal.name || 'Portal';
+  const description = portal.description || '';
+
   let content = `
     <div class="feature-label">
       <div class="feature-label-name">
-        <b>${portalName}</b>
+        <b>${name}</b>
       </div>
       <div class="feature-label-description">
-        ${portal.description || ''}
+        ${description.replace(/\\n/gi, '<br />')}
       </div>
     </div>`;
 
