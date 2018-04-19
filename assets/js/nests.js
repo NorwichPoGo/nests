@@ -1,4 +1,5 @@
 const migrationDates = [
+  new Date(2018, 4, 19),
   new Date(2018, 4, 5),
   new Date(2018, 3, 22),
   new Date(2018, 3, 8),
