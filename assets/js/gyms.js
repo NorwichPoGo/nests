@@ -72,31 +72,6 @@ const Settings = {
         '20': '#64B5F6'
       }
     },
-    s2CellLimits: {
-      type: 'json',
-      defaultValue: {
-        '1': 0,
-        '2': 0,
-        '3': 3,
-        '4': 4,
-        '5': 5,
-        '6': 6,
-        '7': 7,
-        '8': 8,
-        '9': 9,
-        '10': 10,
-        '11': 11,
-        '12': 12,
-        '13': 13,
-        '14': 14,
-        '15': 15,
-        '16': 16,
-        '17': 17,
-        '18': 18,
-        '19': 19,
-        '20': 20
-      }
-    },
     mapCenter: {
       type: 'json',
       defaultValue: {
@@ -203,7 +178,13 @@ function initS2Cells(map) {
   }
 
   map.shouldDisplayCellLevel = function (level) {
-    let cellLevelLimit = Settings.get('s2CellLimits')[level];
+    let cellLevelLimit;
+    if ((level == 1) || (level == 2)) {
+      cellLevelLimit = 0;
+    } else {
+      cellLevelLimit = level;
+    }
+
     if (isMobile() && (cellLevelLimit > 0)) cellLevelLimit -= 1;
     return map.getZoom() >= cellLevelLimit;
   }
