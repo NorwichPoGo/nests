@@ -42,15 +42,12 @@ function urlParameter(parameterName) {
 
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
-    center: {
-      lat: 52.63282,
-      lng: 1.29732
-    },
-    zoom: 13,
+    center: Settings.get('mapCenter'),
+    zoom: Settings.get('zoomLevel'),
     gestureHandling: 'greedy',
-    fullscreenControl: true,
-    streetViewControl: false,
-    mapTypeControl: false,
+    fullscreenControl: false,
+    streetViewControl: true,
+    mapTypeControl: true,
     clickableIcons: false,
     mapTypeControlOptions: {
       style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
@@ -64,6 +61,7 @@ function initMap() {
   });
 
   initNests(map);
+  initSettings(map);
 }
 
 function initNests(map) {
@@ -137,6 +135,16 @@ function loadNestData() {
 
       return nestData;
     });
+}
+
+function initSettings(map) {
+  google.maps.event.addListener(map, 'idle', function () {
+    Settings.set('mapCenter', {
+      lat: map.getCenter().lat(),
+      lng: map.getCenter().lng()
+    });
+    Settings.set('zoomLevel', map.getZoom());
+  });
 }
 
 function loadMigrationData(nestData) {
