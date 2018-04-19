@@ -419,7 +419,8 @@ function gymLabel(gym) {
     </div>`;
 
   return new google.maps.InfoWindow({
-    content: content
+    content: content,
+    pixelOffset: new google.maps.Size(-7, -30)
   });
 }
 
@@ -436,7 +437,8 @@ function pokestopLabel(pokestop) {
     </div>`;
 
   return new google.maps.InfoWindow({
-    content: content
+    content: content,
+    pixelOffset: new google.maps.Size(0, -30)
   });
 }
 
@@ -453,7 +455,8 @@ function portalLabel(portal) {
     </div>`;
 
   return new google.maps.InfoWindow({
-    content: content
+    content: content,
+    pixelOffset: new google.maps.Size(0, -30)
   });
 }
 
