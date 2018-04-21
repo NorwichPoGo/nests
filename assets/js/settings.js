@@ -12,6 +12,10 @@ const Settings = {
       type: 'boolean',
       defaultValue: false
     },
+    showParks: {
+      type: 'boolean',
+      defaultValue: false
+    },
     highlightNewFeatures: {
       type: 'boolean',
       defaultValue: false
@@ -59,7 +63,12 @@ const Settings = {
   },
   get: function(settingName) {
     const setting = Settings.settings[settingName];
-    const rawSettingValue = localStorage.getItem(settingName);
+    const urlSettingValue = urlParameter(settingName);
+    let rawSettingValue = localStorage.getItem(settingName);
+
+    if (urlSettingValue) {
+      rawSettingValue = urlSettingValue;
+    }
 
     if (rawSettingValue === undefined || rawSettingValue === null) {
       return setting.defaultValue;
@@ -84,4 +93,27 @@ const Settings = {
       localStorage.setItem(settingName, value);
     }
   }
+};
+
+/**
+ * Modified from https://stackoverflow.com/questions/19491336 .
+ */
+function urlParameter(parameterName) {
+  const parameterString = decodeURIComponent(window.location.search.substring(1));
+  const parameters = parameterString.split('&');
+
+  let parameterValue;
+  $.each(parameters, function (index, param) {
+    const paramParts = param.split('=');
+    const paramName = paramParts[0];
+    const paramValue = paramParts[1];
+
+    if ((paramName == parameterName)
+        && (paramValue !== undefined)) {
+      parameterValue = paramValue;
+      return false;
+    }
+  });
+
+  return parameterValue;
 };

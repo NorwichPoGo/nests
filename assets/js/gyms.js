@@ -1,5 +1,3 @@
-const featuresFile = '/data/features.csv';
-
 /**
  * Modified from https://stackoverflow.com/questions/19491336 .
  */
@@ -45,6 +43,7 @@ function initMap() {
 
   initS2Cells(map);
   initFeatures(map);
+  initParks(map);
   initSettings(map);
 }
 
@@ -139,6 +138,28 @@ function initFeatures(map) {
     });
 }
 
+function initParks(map) {
+  loadParkData()
+    .then(function (parks) {
+      const parksLayer = new google.maps.Data();
+      parksLayer.addGeoJson(parks);
+      parksLayer.setStyle({
+        fillColor: 'green'
+  	  });
+
+      parksLayer.show = function (show) {
+        if (show === false) {
+          parksLayer.setMap(null);
+        } else {
+          parksLayer.setMap(map);
+        }
+      }
+
+      map.parksLayer = parksLayer;
+      map.parksLayer.show(Settings.get('showParks'));
+    });
+}
+
 function initSettings(map) {
   google.maps.event.addListener(map, 'click', function () {
     $('.settings').collapse('hide');
@@ -171,6 +192,16 @@ function initSettings(map) {
     function(event, state) {
       localStorage.setItem('showPortals', state);
       map.drawFeatures();
+    }
+  );
+
+  $("[name='toggle-parks']").bootstrapSwitch();
+  $("[name='toggle-parks']").bootstrapSwitch('state',
+    Settings.get('showParks'));
+  $('[name="toggle-parks"]').on('switchChange.bootstrapSwitch',
+    function(event, state) {
+      localStorage.setItem('showParks', state);
+      map.parksLayer.show(state);
     }
   );
 
@@ -234,7 +265,7 @@ function initSettings(map) {
 function loadFeatureData() {
   return Promise.resolve($.ajax({
       type: 'GET',
-      url: featuresFile,
+      url: '/data/features.csv',
       dataType: 'text'
     }))
     .then(function (featureDataCSV) {
@@ -311,6 +342,10 @@ function loadFeatureData() {
 
       return featureData;
     });
+}
+
+function loadParkData() {
+  return Promise.resolve($.getJSON('/data/parks.geojson'));
 }
 
 function zoomToFeature(map, feature, zoom) {
