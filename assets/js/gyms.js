@@ -147,7 +147,7 @@ function initSettings(map) {
     Settings.get('showGyms'));
   $('[name="toggle-gyms"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
-      localStorage.setItem('showGyms', state);
+      Settings.set('showGyms', state);
       map.drawFeatures();
     }
   );
@@ -157,7 +157,7 @@ function initSettings(map) {
     Settings.get('showPokestops'));
   $('[name="toggle-pokestops"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
-      localStorage.setItem('showPokestops', state);
+      Settings.set('showPokestops', state);
       map.drawFeatures();
     }
   );
@@ -167,7 +167,7 @@ function initSettings(map) {
     Settings.get('showPortals'));
   $('[name="toggle-portals"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
-      localStorage.setItem('showPortals', state);
+      Settings.set('showPortals', state);
       map.drawFeatures();
     }
   );
@@ -177,7 +177,7 @@ function initSettings(map) {
     Settings.get('showParks'));
   $('[name="toggle-parks"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
-      localStorage.setItem('showParks', state);
+      Settings.set('showParks', state);
       map.parksLayer.show(state);
     }
   );
@@ -187,7 +187,7 @@ function initSettings(map) {
     Settings.get('highlightNewFeatures'));
   $('[name="toggle-highlight-new-features"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
-      localStorage.setItem('highlightNewFeatures', state);
+      Settings.set('highlightNewFeatures', state);
       map.drawFeatures(function (feature) {
         return feature.isNew;
       });

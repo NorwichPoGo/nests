@@ -63,11 +63,19 @@ const Settings = {
   },
   get: function(settingName) {
     const setting = Settings.settings[settingName];
-    const urlSettingValue = urlParameter(settingName);
     let rawSettingValue = localStorage.getItem(settingName);
 
-    if (urlSettingValue) {
-      rawSettingValue = urlSettingValue;
+    if (setting.getURLValue === undefined) {
+      setting.getURLValue = function () {
+        return urlParameter(settingName);
+      };
+    }
+
+    if (setting.getURLValue && setting.getURLValue != false) {
+      const urlValue = setting.getURLValue();
+      if (urlValue) {
+        rawSettingValue = urlValue;
+      }
     }
 
     if (rawSettingValue === undefined || rawSettingValue === null) {
@@ -86,6 +94,9 @@ const Settings = {
   },
   set: function (settingName, value) {
     const setting = Settings.settings[settingName];
+
+    console.log(settingName + ': ' + value);
+    setting.getURLValue = false;
 
     if (setting.type == 'json') {
       localStorage.setItem(settingName, JSON.stringify(value));
