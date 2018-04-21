@@ -1,26 +1,3 @@
-/**
- * Modified from https://stackoverflow.com/questions/19491336 .
- */
-function urlParameter(parameterName) {
-  const parameterString = decodeURIComponent(window.location.search.substring(1));
-  const parameters = parameterString.split('&');
-
-  let parameterValue;
-  $.each(parameters, function (index, param) {
-    const paramParts = param.split('=');
-    const paramName = paramParts[0];
-    const paramValue = paramParts[1];
-
-    if ((paramName == parameterName)
-        && (paramValue !== undefined)) {
-      parameterValue = paramValue;
-      return false;
-    }
-  });
-
-  return parameterValue;
-};
-
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
     center: Settings.get('mapCenter'),
