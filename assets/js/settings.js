@@ -12,6 +12,10 @@ const Settings = {
       type: 'boolean',
       defaultValue: false
     },
+    highlightNewFeatures: {
+      type: 'boolean',
+      defaultValue: false
+    },
     s2Cells: {
       type: 'json',
       defaultValue: []

@@ -1,4 +1,4 @@
-const featuresFile = '/data/features.json';
+const featuresFile = '/data/features.csv';
 
 /**
  * Modified from https://stackoverflow.com/questions/19491336 .
@@ -104,7 +104,7 @@ function initS2Cells(map) {
 }
 
 function initFeatures(map) {
-  map.drawFeatures = function () {
+  map.drawFeatures = function (shouldRedraw) {
     $.each(map.features, function (index, feature) {
       /* Don't show duplicate features (e.g. both a pokestop and a portal)
          as they clutter the map. */
@@ -118,6 +118,10 @@ function initFeatures(map) {
       }
 
       if (feature.shouldShow() && !featureIsShadowed) {
+        if (shouldRedraw && shouldRedraw(feature)) {
+          feature.draw(map, true);
+        }
+
         if (!feature.isShown()) {
           feature.draw(map);
           feature.show(map);
@@ -141,7 +145,8 @@ function initSettings(map) {
   });
 
   $('[name="toggle-gyms"]').bootstrapSwitch();
-  $('[name="toggle-gyms"]').bootstrapSwitch('state', Settings.get('showGyms'));
+  $('[name="toggle-gyms"]').bootstrapSwitch('state',
+    Settings.get('showGyms'));
   $('[name="toggle-gyms"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
       localStorage.setItem('showGyms', state);
@@ -150,7 +155,8 @@ function initSettings(map) {
   );
 
   $("[name='toggle-pokestops']").bootstrapSwitch();
-  $("[name='toggle-pokestops']").bootstrapSwitch('state', Settings.get('showPokestops'));
+  $("[name='toggle-pokestops']").bootstrapSwitch('state',
+    Settings.get('showPokestops'));
   $('[name="toggle-pokestops"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
       localStorage.setItem('showPokestops', state);
@@ -159,11 +165,24 @@ function initSettings(map) {
   );
 
   $("[name='toggle-portals']").bootstrapSwitch();
-  $("[name='toggle-portals']").bootstrapSwitch('state', Settings.get('showPortals'));
+  $("[name='toggle-portals']").bootstrapSwitch('state',
+    Settings.get('showPortals'));
   $('[name="toggle-portals"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
       localStorage.setItem('showPortals', state);
       map.drawFeatures();
+    }
+  );
+
+  $("[name='toggle-highlight-new-features']").bootstrapSwitch();
+  $("[name='toggle-highlight-new-features']").bootstrapSwitch('state',
+    Settings.get('highlightNewFeatures'));
+  $('[name="toggle-highlight-new-features"]').on('switchChange.bootstrapSwitch',
+    function(event, state) {
+      localStorage.setItem('highlightNewFeatures', state);
+      map.drawFeatures(function (feature) {
+        return feature.isNew;
+      });
     }
   );
 
@@ -213,14 +232,27 @@ function initSettings(map) {
 }
 
 function loadFeatureData() {
-  return Promise.resolve($.getJSON(featuresFile))
+  return Promise.resolve($.ajax({
+      type: 'GET',
+      url: featuresFile,
+      dataType: 'text'
+    }))
+    .then(function (featureDataCSV) {
+      return $.csv.toObjects(featureDataCSV);
+    })
     .then(function (featureData) {
-      featureData = featureData['features'];
-
       const baseURL = location.protocol + '//' + location.host + location.pathname;
 
+      let dateOfLastUpdate = new Date(1990, 0, 1);
       const portalMap = {};
       $.each(featureData, function (index, feature) {
+        if (feature.date_added) {
+          feature.date_added = new Date(feature.date_added);
+          if (feature.date_added > dateOfLastUpdate) {
+            dateOfLastUpdate = feature.date_added;
+          }
+        }
+
         if (feature.type == 'portal') {
           portalMap[feature.id] = feature;
           feature.shadowFeatures = [];
@@ -231,6 +263,7 @@ function loadFeatureData() {
         feature.location = coordinateToLatLng([feature.latitude, feature.longitude]);
         feature.permalinkName = feature.id;
         feature.permalink = `${baseURL}?${feature.type}=${feature.id}`;
+        feature.isNew = feature.date_added.getTime() >= dateOfLastUpdate.getTime();
 
         if (feature.type != 'portal') {
           const portal = portalMap[feature.id];
@@ -266,8 +299,11 @@ function loadFeatureData() {
           return feature.marker && feature.marker.map;
         };
 
-        feature.draw = function (map) {
-          if (!feature.marker) {
+        feature.draw = function (map, redraw) {
+          if (redraw) {
+            this.hide();
+            drawFeature(map, feature);
+          } else if (!feature.marker) {
             drawFeature(map, feature);
           }
         };
@@ -285,9 +321,20 @@ function zoomToFeature(map, feature, zoom) {
 function drawFeature(map, feature) {
   const featureMarkerIcons = {
     gym: '/assets/images/gym.png',
+    new_gym: '/assets/images/gym.png',
     pokestop: '/assets/images/pokestop.png',
-    portal: '/assets/images/portal.png'
+    new_pokestop: '/assets/images/new_pokestop.png',
+    portal: '/assets/images/portal.png',
+    new_portal: '/assets/images/new_portal.png'
   };
+
+  let markerIcon;
+  if (Settings.get('highlightNewFeatures') && feature.isNew) {
+    markerIcon = featureMarkerIcons['new_' + feature.type];
+  } else {
+    markerIcon = featureMarkerIcons[feature.type];
+  }
+
   const anchorX = (feature.type == 'gym') ? 22 : 15;
 
   let featureMarker;
@@ -295,7 +342,7 @@ function drawFeature(map, feature) {
     featureMarker = new google.maps.Marker({
       position: feature.location,
       icon: {
-        url: featureMarkerIcons[feature.type],
+        url: markerIcon,
         scaledSize: new google.maps.Size(30, 30),
         anchor: new google.maps.Point(anchorX, 30)
       },
