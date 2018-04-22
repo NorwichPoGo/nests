@@ -95,7 +95,6 @@ const Settings = {
   set: function (settingName, value) {
     const setting = Settings.settings[settingName];
 
-    console.log(settingName + ': ' + value);
     setting.getURLValue = false;
 
     if (setting.type == 'json') {
