@@ -11,12 +11,6 @@ const migrationDates = [
 const pokemonImagesUrl = 'https://raw.githubusercontent.com/pogo-excalibur' +
                          '/images/master/pogo';
 
-const nestsFile = '/data/nests.json';
-
-const manualNestsFile = '/data/manual_nests.json';
-
-const nestMigrationsDir = '/data/nest_migrations';
-
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
     center: Settings.get('mapCenter'),
@@ -63,24 +57,40 @@ function initNests(map) {
       return nestData;
     })
     .then(function (nestData) {
-      return loadMigrationData()
-        .then(function (allMigrationData) {
-          $.each(allMigrationData, function (index, migrationData) {
-            const date = migrationDates[index];
+      return Promise.all([
+        nestData,
+        loadMigrationData(nestData),
+        loadPokemonData()
+      ]);
+    })
+    .then(function (results) {
+      const nestData = results[0];
+      const allMigrationData = results[1];
+      const pokemonData = results[2];
 
-            $.each(nestData, function (nestId, nest) {
-              if (migrationData[nestId]) {
-                if (!nest.migrations) {
-                  nest.migrations = [];
-                }
+      $.each(allMigrationData, function (index, migrationData) {
+        const date = migrationDates[index];
 
-                nest.migrations[date] = migrationData[nestId];
-              }
-            });
-          });
+        $.each(nestData, function (nestId, nest) {
+          if (migrationData[nestId]) {
+            if (migrationData[nestId].id === undefined) {
+              const pokeData = pokemonData[migrationData[nestId]];
+              migrationData[nestId] = {
+                id: migrationData[nestId],
+                name: pokeData.name
+              };
+            }
 
-          return nestData;
+            if (!nest.migrations) {
+              nest.migrations = [];
+            }
+
+            nest.migrations[date] = migrationData[nestId];
+          }
         });
+      });
+
+      return nestData;
     })
     .then(function (nestData) {
       $.each(nestData, function (nestId, nest) {
@@ -89,10 +99,20 @@ function initNests(map) {
     });
 }
 
+function initSettings(map) {
+  google.maps.event.addListener(map, 'idle', function () {
+    Settings.set('mapCenter', {
+      lat: map.getCenter().lat(),
+      lng: map.getCenter().lng()
+    });
+    Settings.set('zoomLevel', map.getZoom());
+  });
+}
+
 function loadNestData() {
-  return Promise.resolve($.getJSON(nestsFile))
+  return Promise.resolve($.getJSON('/data/nests.json'))
     .then(function (nestData) {
-      return Promise.resolve($.getJSON(manualNestsFile))
+      return Promise.resolve($.getJSON('/data/manual_nests.json'))
         .then(function (manualNestData) {
           return Object.assign(nestData, manualNestData);;
         });
@@ -114,21 +134,15 @@ function loadNestData() {
     });
 }
 
-function initSettings(map) {
-  google.maps.event.addListener(map, 'idle', function () {
-    Settings.set('mapCenter', {
-      lat: map.getCenter().lat(),
-      lng: map.getCenter().lng()
-    });
-    Settings.set('zoomLevel', map.getZoom());
-  });
-}
-
 function loadMigrationData(nestData) {
   return Promise.all($.map(migrationDates, function (date) {
-    const migrationFile = `${nestMigrationsDir}/${dateToString(date)}.json`;
+    const migrationFile = `/data/nest_migrations/${dateToString(date)}.json`;
     return Promise.resolve($.getJSON(migrationFile));
   }))
+}
+
+function loadPokemonData() {
+  return Promise.resolve($.getJSON('/data/pokemon.json'));
 }
 
 function zoomToNest(map, nest) {
