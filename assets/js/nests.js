@@ -8,6 +8,11 @@ const migrationDates = [
   new Date(2018, 1, 25)
 ];
 
+const nestUpdates = [
+  new Date(2018, 3, 30),
+  new Date(2011, 0, 1)
+];
+
 const pokemonImagesUrl = 'https://raw.githubusercontent.com/pogo-excalibur' +
                          '/images/master/pogo';
 
@@ -192,7 +197,7 @@ function drawNest(map, nest) {
 
 function nestRegion(nest) {
   let nestColor = 'green';
-  if (nest.date_added == '2018-03-25') {
+  if (nest.date_added == dateToString(nestUpdates[0])) {
     nestColor = 'blue';
   }
 
