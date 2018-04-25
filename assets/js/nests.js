@@ -191,11 +191,16 @@ function drawNest(map, nest) {
 }
 
 function nestRegion(nest) {
+  let nestColor = 'green';
+  if (nest.date_added == '2018-03-25') {
+    nestColor = 'blue';
+  }
+
   return new google.maps.Polygon({
     paths: nest.region,
-    fillColor: 'green',
+    fillColor: nestColor,
     fillOpacity: 0.5,
-    strokeColor: 'green',
+    strokeColor: nestColor,
     strokeOpacity: 1,
     strokeWeight: 0
   });
