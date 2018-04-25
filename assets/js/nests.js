@@ -246,10 +246,10 @@ function nestLabel(nest) {
 
   let spawnpointCount
   if (nest.spawnpoints) {
-    if (nest.spawnpoints.length > 1) {
-      spawnpointCount = `${nest.spawnpoints.length} spawnpoints`;
+    if (nest.spawnpoints > 1) {
+      spawnpointCount = `${nest.spawnpoints} spawnpoints`;
     } else {
-      spawnpointCount = `${nest.spawnpoints.length} spawnpoint`;
+      spawnpointCount = `${nest.spawnpoints} spawnpoint`;
     }
   } else {
     spawnpointCount = 'Number of spawnpoints unknown';
