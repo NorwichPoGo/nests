@@ -80,38 +80,15 @@ function initS2Cells(map) {
 }
 
 function initFeatures(map) {
-  map.drawFeatures = function (shouldRedraw) {
+  map.showFeatures = function (shouldRedraw) {
     $.each(map.features, function (index, feature) {
-      /* Don't show duplicate features (e.g. both a pokestop and a portal)
-         as they clutter the map. */
-      let featureIsShadowed = false;
-      if (feature.shadowFeatures) {
-        $.each(feature.shadowFeatures, function (index, shadowFeature) {
-          if (shadowFeature.shouldShow()) {
-            featureIsShadowed = true;
-          }
-        });
-      }
-
-      if (feature.shouldShow() && !featureIsShadowed) {
-        if (shouldRedraw && shouldRedraw(feature)) {
-          feature.draw(map, true);
-        }
-
-        if (!feature.isShown()) {
-          feature.draw(map);
-          feature.show(map);
-        }
-      } else {
-        feature.hide();
-      }
+      feature.show(map, shouldRedraw);
     });
   };
 
-  loadFeatureData()
+  loadAndDrawFeatureDataIncrementally(map)
     .then(function (features) {
       map.features = features;
-      map.drawFeatures();
     });
 }
 
@@ -148,7 +125,7 @@ function initSettings(map) {
   $('[name="toggle-gyms"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
       Settings.set('showGyms', state);
-      map.drawFeatures();
+      map.showFeatures();
     }
   );
 
@@ -158,7 +135,7 @@ function initSettings(map) {
   $('[name="toggle-pokestops"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
       Settings.set('showPokestops', state);
-      map.drawFeatures();
+      map.showFeatures();
     }
   );
 
@@ -168,7 +145,7 @@ function initSettings(map) {
   $('[name="toggle-portals"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
       Settings.set('showPortals', state);
-      map.drawFeatures();
+      map.showFeatures();
     }
   );
 
@@ -188,7 +165,7 @@ function initSettings(map) {
   $('[name="toggle-highlight-new-features"]').on('switchChange.bootstrapSwitch',
     function(event, state) {
       Settings.set('highlightNewFeatures', state);
-      map.drawFeatures(function (feature) {
+      map.showFeatures(function (feature) {
         return feature.isNew;
       });
     }
@@ -239,86 +216,125 @@ function initSettings(map) {
   $('.select-s2-cells-wrapper .bs-select-all').prop('disabled', true);
 }
 
-function loadFeatureData() {
-  return Promise.resolve($.ajax({
-      type: 'GET',
-      url: '/data/features.csv',
-      dataType: 'text'
-    }))
-    .then(function (featureDataCSV) {
-      return $.csv.toObjects(featureDataCSV);
+function loadAndDrawFeatureDataIncrementally(map) {
+  const chunkSize = 200;
+
+  return fetchFeatureCount()
+    .then(function (featureCount) {
+      const chunks = Math.ceil(featureCount / chunkSize);
+
+      const featureDataPromises = [];
+      for (let i = 0; i < chunks; ++i) {
+        const promise = fetchFeatureData(chunkSize, i * chunkSize)
+          .then(function (featureData) {
+            return loadFeatures(featureData);
+          })
+          .then(function (featureData) {
+            $.each(featureData, function (index, feature) {
+              feature.show(map);
+            });
+            return featureData;
+          });
+        featureDataPromises.push(promise);
+      }
+
+      return Promise.all(featureDataPromises);
     })
-    .then(function (featureData) {
-      const baseURL = location.protocol + '//' + location.host + location.pathname;
-
-      let dateOfLastUpdate = new Date(1990, 0, 1);
-      const portalMap = {};
-      $.each(featureData, function (index, feature) {
-        if (feature.date_added) {
-          feature.date_added = new Date(feature.date_added);
-          if (feature.date_added > dateOfLastUpdate) {
-            dateOfLastUpdate = feature.date_added;
-          }
-        }
-
-        if (feature.type == 'portal') {
-          portalMap[feature.id] = feature;
-          feature.shadowFeatures = [];
-        }
-      });
-
-      $.each(featureData, function (index, feature) {
-        feature.location = coordinateToLatLng([feature.latitude, feature.longitude]);
-        feature.permalinkName = feature.id;
-        feature.permalink = `${baseURL}?${feature.type}=${feature.id}`;
-        feature.isNew = feature.date_added.getTime() >= dateOfLastUpdate.getTime();
-
-        if (feature.type != 'portal') {
-          const portal = portalMap[feature.id];
-          if (portal) {
-            portal.shadowFeatures.push(feature);
-            if (!(feature.name)) {
-              feature.name = portal.name;
-            }
-          }
-        }
-
-        feature.hide = function () {
-          if (feature.marker) {
-            feature.marker.setMap(null);
-          }
-        };
-
-        feature.show = function (map) {
-          if (feature.marker) {
-            feature.marker.setMap(map);
-          }
-        };
-
-        feature.shouldShow = function () {
-          if (((feature.type == 'gym') && Settings.get('showGyms')) ||
-              ((feature.type == 'pokestop') && Settings.get('showPokestops')) ||
-              ((feature.type == 'portal') && Settings.get('showPortals'))) {
-            return true;
-          }
-        };
-
-        feature.isShown = function () {
-          return feature.marker && feature.marker.map;
-        };
-
-        feature.draw = function (map, redraw) {
-          if (redraw) {
-            this.hide();
-            drawFeature(map, feature);
-          } else if (!feature.marker) {
-            drawFeature(map, feature);
-          }
-        };
-      });
-
-      return featureData;
+    .then(function (featureDataChunks) {
+      return featureDataChunks.reduce(function (featureData, chunk) {
+        return featureData.concat(chunk);
+      }, []);
     });
+}
+
+function fetchFeatureCount() {
+  const ajaxRequest = $.ajax({
+    type: 'GET',
+    url: 'https://script.google.com/macros/s/' +
+         'AKfycbxl9JjGfAM9tgfCN_s9kmgarbzDPDSMuukoYZaXU9kDW7Gj4mk/exec' +
+         '?action=count',
+    dataType: 'text'
+  });
+  return Promise.resolve(ajaxRequest);
+}
+
+function fetchFeatureData(chunkSize, start) {
+  const ajaxRequest = $.ajax({
+    type: 'GET',
+    url: 'https://script.google.com/macros/s/' +
+         'AKfycbxl9JjGfAM9tgfCN_s9kmgarbzDPDSMuukoYZaXU9kDW7Gj4mk/exec' +
+         '?action=get' +
+         `&count=${chunkSize}` +
+         `&start=${start}`,
+    dataType: 'json'
+  });
+  return Promise.resolve(ajaxRequest);
+}
+
+function loadFeatures(featureData) {
+  const baseURL = location.protocol + '//' + location.host + location.pathname;
+
+  let dateOfLastUpdate = new Date(1990, 0, 1);
+  $.each(featureData, function (index, feature) {
+    if (feature.dateAdded) {
+      feature.dateAdded = new Date(feature.dateAdded);
+      if (feature.dateAdded > dateOfLastUpdate) {
+        dateOfLastUpdate = feature.dateAdded;
+      }
+    }
+  });
+
+  $.each(featureData, function (index, feature) {
+    feature.type = feature.type.toLowerCase();
+    feature.location = coordinateToLatLng([feature.latitude, feature.longitude]);
+    feature.permalinkName = feature.id;
+    feature.permalink = `${baseURL}?${feature.type}=${feature.id}`;
+    feature.isNew = feature.dateAdded.getTime() >= dateOfLastUpdate.getTime();
+
+    feature.hide = function () {
+      if (feature.marker) {
+        feature.marker.setMap(null);
+      }
+    };
+
+    feature.show = function (map, shouldRedraw) {
+      if (this.shouldShow()) {
+        if (shouldRedraw && shouldRedraw(feature)) {
+          this.draw(map, true);
+        }
+
+        if (!this.isShown()) {
+          this.draw(map);
+          this.marker.setMap(map);
+        }
+      } else {
+        this.hide();
+      }
+    };
+
+    feature.shouldShow = function () {
+      if (((feature.type == 'gym') && Settings.get('showGyms')) ||
+          ((feature.type == 'pokestop') && Settings.get('showPokestops')) ||
+          ((feature.type == 'portal') && Settings.get('showPortals'))) {
+        return true;
+      }
+    };
+
+    feature.isShown = function () {
+      return feature.marker && feature.marker.map;
+    };
+
+    feature.draw = function (map, redraw) {
+      if (redraw) {
+        this.hide();
+        drawFeature(map, feature);
+      } else if (!feature.marker) {
+        drawFeature(map, feature);
+      }
+    };
+  });
+
+  return featureData;
 }
 
 function loadParkData() {
