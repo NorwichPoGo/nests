@@ -8,8 +8,8 @@ function initMap() {
     mapTypeControl: true,
     clickableIcons: false,
     mapTypeControlOptions: {
-      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-      position: google.maps.ControlPosition.RIGHT_TOP,
+      style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+      position: google.maps.ControlPosition.LEFT_BOTTOM,
       mapTypeIds: [
         google.maps.MapTypeId.ROADMAP,
         google.maps.MapTypeId.SATELLITE,
@@ -18,10 +18,80 @@ function initMap() {
     }
   });
 
+  initSearchBox(map);
   initS2Cells(map);
   initFeatures(map);
   initParks(map);
   initSettings(map);
+}
+
+function initSearchBox(map) {
+  const searchBoxInput = document.createElement('input');
+  searchBoxInput.setAttribute('id', 'pac-input');
+  searchBoxInput.setAttribute('class', 'controls');
+  searchBoxInput.setAttribute('type', 'text');
+  searchBoxInput.setAttribute('placeholder', 'Search Gyms and Pokestops');
+
+  const searchBoxDropdown = document.createElement('div');
+  searchBoxDropdown.setAttribute('class', 'pac-container  pac-logo');
+
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchBoxInput);
+  map.searchBox = $(searchBoxInput);
+  map.searchBox.prop('disabled', true);
+
+  map.searchBox.dropdown = $(searchBoxDropdown);
+  map.searchBox.dropdown.appendTo('body');
+
+  $(document).click(function () {
+    map.searchBox.dropdown.hide();
+  });
+
+  map.searchBox.click(function (e) {
+    e.stopPropagation();
+  });
+
+  map.searchBox.dropdown.add = function (feature) {
+    const resultWrapper = document.createElement('div');
+    resultWrapper.setAttribute('class', 'pac-item');
+
+    const resultIcon = document.createElement('span');
+    resultIcon.setAttribute('class', `pac-icon pac-icon-${feature.type}`);
+
+    const resultMatch = document.createElement('span');
+    resultMatch.setAttribute('class', 'pac-item-query');
+    resultMatch.innerHTML =
+      `<span class="pac-item-query">${feature.name}</span>`;
+
+    const resultDescription = document.createElement('span');
+    resultDescription.innerHTML = feature.description || '';
+
+    resultWrapper.appendChild(resultIcon);
+    resultWrapper.appendChild(resultMatch);
+    resultWrapper.appendChild(resultDescription);
+    map.searchBox.dropdown[0].appendChild(resultWrapper);
+
+    $(resultWrapper).click(function () {
+      map.panTo(feature.location);
+      feature.label.open(map);
+    });
+  };
+
+  map.searchBox.on('input', function (e) {
+    map.searchBox.dropdown.empty();
+
+    if (!map.features || !map.features.nameLookup) return;
+
+    const matches = map.features.nameLookup.search(e.currentTarget.value);
+    const visibleMatches = matches.filter(function (match) {
+      return match.isShown();
+    });
+
+    $.each(visibleMatches.slice(0, 4), function (index, match) {
+      map.searchBox.dropdown.add(match);
+    });
+
+    map.searchBox.dropdown.show();
+  });
 }
 
 function initS2Cells(map) {
@@ -86,9 +156,23 @@ function initFeatures(map) {
     });
   };
 
-  loadAndDrawFeatureDataIncrementally(map)
+  return loadAndDrawFeatureDataIncrementally(map)
     .then(function (features) {
       map.features = features;
+
+      map.features.nameLookup = new Fuse(map.features, {
+        shouldSort: true,
+        threshold: 0.5,
+        location: 0,
+        distance: 100,
+        maxPatternLength: 32,
+        minMatchCharLength: 1,
+        keys: [
+          'name'
+        ]
+      });
+
+      $('#pac-input').prop('disabled', false);
     });
 }
 
@@ -463,24 +547,34 @@ function portalLabel(portal) {
 function addLabelActions(map, feature) {
   feature.label.isOpen = false;
 
+  feature.label._open = feature.label.open;
+  feature.label._close = feature.label.close;
+
+  feature.label.open = function (map) {
+    feature.label.setPosition(feature.location);
+    feature.label._open(map);
+    feature.label.isOpen = true;
+  };
+
+  feature.label.close = function () {
+    feature.label._close();
+    feature.label.isOpen = false;
+  };
+
   feature.marker.addListener('click', function () {
     if (feature.label.isOpen) {
       feature.label.close();
-      feature.label.isOpen = false;
     } else {
-      feature.label.setPosition(feature.location);
       feature.label.open(map);
-      feature.label.isOpen = true;
     }
   });
 
   map.addListener('click', function () {
     feature.label.close();
-    feature.label.isOpen = false;
   });
 
   feature.label.addListener('closeclick', function () {
-    feature.label.isOpen = false;
+    feature.label.close();
   });
 }
 
