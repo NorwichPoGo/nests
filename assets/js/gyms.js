@@ -301,7 +301,7 @@ function initSettings(map) {
 }
 
 function loadAndDrawFeatureDataIncrementally(map) {
-  const chunkSize = 200;
+  const chunkSize = 400;
 
   return fetchFeatureCount()
     .then(function (featureCount) {
@@ -332,27 +332,23 @@ function loadAndDrawFeatureDataIncrementally(map) {
 }
 
 function fetchFeatureCount() {
-  const ajaxRequest = $.ajax({
+  const request = $.ajax({
     type: 'GET',
-    url: 'https://script.google.com/macros/s/' +
-         'AKfycbxl9JjGfAM9tgfCN_s9kmgarbzDPDSMuukoYZaXU9kDW7Gj4mk/exec' +
-         '?action=count',
-    dataType: 'text'
+    url: 'https://api.pokemongonorwich.uk/gyms?action=count',
+    dataType: 'json'
   });
-  return Promise.resolve(ajaxRequest);
+  return Promise.resolve(request);
 }
 
 function fetchFeatureData(chunkSize, start) {
-  const ajaxRequest = $.ajax({
+  const request = $.ajax({
     type: 'GET',
-    url: 'https://script.google.com/macros/s/' +
-         'AKfycbxl9JjGfAM9tgfCN_s9kmgarbzDPDSMuukoYZaXU9kDW7Gj4mk/exec' +
-         '?action=get' +
+    url: 'https://api.pokemongonorwich.uk/gyms?action=get' +
          `&count=${chunkSize}` +
          `&start=${start}`,
     dataType: 'json'
   });
-  return Promise.resolve(ajaxRequest);
+  return Promise.resolve(request);
 }
 
 function loadFeatures(featureData) {
@@ -360,20 +356,32 @@ function loadFeatures(featureData) {
 
   let dateOfLastUpdate = new Date(1990, 0, 1);
   $.each(featureData, function (index, feature) {
-    if (feature.dateAdded) {
-      feature.dateAdded = new Date(feature.dateAdded);
-      if (feature.dateAdded > dateOfLastUpdate) {
-        dateOfLastUpdate = feature.dateAdded;
-      }
+    if (!feature.dateAdded) return;
+
+    feature.dateAdded = new Date(feature.dateAdded);
+    if (feature.dateAdded > dateOfLastUpdate) {
+      dateOfLastUpdate = feature.dateAdded;
     }
   });
 
+  const validFeatures = [];
+
   $.each(featureData, function (index, feature) {
+    if (!feature.type ||
+        !feature.latitude ||
+        !feature.longitude) {
+      return;
+    };
+
     feature.type = feature.type.toLowerCase();
     feature.location = coordinateToLatLng([feature.latitude, feature.longitude]);
     feature.permalinkName = feature.id;
     feature.permalink = `${baseURL}?${feature.type}=${feature.id}`;
-    feature.isNew = feature.dateAdded.getTime() >= dateOfLastUpdate.getTime();
+
+    if (feature.dateAdded &&
+        (feature.dateAdded.getTime() >= dateOfLastUpdate.getTime())) {
+      feature.isNew = true;
+    }
 
     feature.hide = function () {
       if (feature.marker) {
@@ -416,9 +424,11 @@ function loadFeatures(featureData) {
         drawFeature(map, feature);
       }
     };
+
+    validFeatures.push(feature);
   });
 
-  return featureData;
+  return validFeatures;
 }
 
 function loadParkData() {
