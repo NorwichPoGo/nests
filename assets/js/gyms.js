@@ -334,7 +334,7 @@ function loadAndDrawFeatureDataIncrementally(map) {
 function fetchFeatureCount() {
   const request = $.ajax({
     type: 'GET',
-    url: 'https://api.pokemongonorwich.uk/gyms?action=count',
+    url: 'https://api.pokemongonorwich.uk/pois?action=count',
     dataType: 'json'
   });
   return Promise.resolve(request);
@@ -343,7 +343,7 @@ function fetchFeatureCount() {
 function fetchFeatureData(chunkSize, start) {
   const request = $.ajax({
     type: 'GET',
-    url: 'https://api.pokemongonorwich.uk/gyms?action=get' +
+    url: 'https://api.pokemongonorwich.uk/pois?action=get' +
          `&count=${chunkSize}` +
          `&start=${start}`,
     dataType: 'json'
