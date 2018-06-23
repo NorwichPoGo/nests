@@ -1,0 +1,23 @@
+{
+  "name": "norwichpogo",
+  "version": "1.0.0",
+  "description": "",
+  "author": "arandomoracle",
+  "license": "MIT",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "lint": "grunt lint",
+    "build": "grunt build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "grunt": "^1.0.2",
+    "grunt-babel": "^7.0.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-uglify": "^3.3.0",
+    "gruntify-eslint": "^4.0.0"
+  }
+}
