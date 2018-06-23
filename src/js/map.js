@@ -303,7 +303,7 @@ function initSettings(map) {
 }
 
 function loadAndDrawFeatureDataIncrementally(map) {
-  const chunkSize = 400;
+  const chunkSize = 250;
 
   return fetchFeatureCount()
     .then(function (featureCount) {
