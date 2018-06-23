@@ -7,7 +7,8 @@ module.exports = grunt => {
       src: [
         'Gruntfile.js',
         'src/js/**/*.js',
-        '!src/js/vendor/**/*.js'
+        '!src/js/vendor/**/*.js',
+        'bin/**/*.js'
       ]
     },
     browserify: {
