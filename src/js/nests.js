@@ -16,7 +16,7 @@ const nestUpdates = [
 const pokemonImagesUrl = 'https://raw.githubusercontent.com/pogo-excalibur' +
                          '/images/master/pogo';
 
-function initMap() {
+window.initMap = () => {
   const map = new google.maps.Map(document.getElementById('map'), {
     center: Settings.get('mapCenter'),
     zoom: Settings.get('zoomLevel'),

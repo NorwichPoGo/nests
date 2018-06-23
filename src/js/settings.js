@@ -1,4 +1,4 @@
-const Settings = {
+window.Settings = {
   settings: {
     showGyms: {
       type: 'boolean',
