@@ -1,8 +1,7 @@
 'use strict';
 
 const git = require('simple-git/promise')();
-const grunt = require('grunt');
-const Gruntfile = require('../Gruntfile')(grunt);
+const automaticBuild = require('./automatic_build');
 
 const isSourceFile = filename => {
   const isGruntfile = filename == 'Gruntfile.js';
@@ -13,6 +12,7 @@ const isSourceFile = filename => {
 const checkForSourceChanges = () => {
   return git.diffSummary('origin/master', 'master')
     .then(diff => {
+      console.log(diff);
       return diff.files.find(change => isSourceFile(change.file));
     });
 };
@@ -28,18 +28,6 @@ const checkForUncommittedChanges = () => {
   return git.status()
     .then(status => {
       return status.files.find(file => isSourceFile(file.path));
-    });
-};
-
-const buildCommitAndPushAssets = () => {
-  grunt.tasks('build');
-
-  return git.add('assets/js')
-    .then(() => {
-      return git.commit('Automatic asset rebuild.');
-    })
-    .then(() => {
-      return git.push('origin', 'master');
     });
 };
 
@@ -68,7 +56,7 @@ checkForSourceChanges()
         }
       })
       .then(() => {
-        return buildCommitAndPushAssets();
+        return automaticBuild();
       });
   })
   .catch(error => {
