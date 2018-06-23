@@ -12,7 +12,6 @@ const isSourceFile = filename => {
 const checkForSourceChanges = () => {
   return git.diffSummary('origin/master', 'master')
     .then(diff => {
-      console.log(diff);
       return diff.files.find(change => isSourceFile(change.file));
     });
 };
