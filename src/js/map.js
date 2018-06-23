@@ -1,5 +1,8 @@
 'use strict';
 
+const Settings = require('./settings');
+const Utils = require('./utils');
+
 window.initMap = () => {
   const map = new google.maps.Map(document.getElementById('map'), {
     center: Settings.get('mapCenter'),
@@ -25,7 +28,7 @@ window.initMap = () => {
   initFeatures(map);
   initParks(map);
   initSettings(map);
-}
+};
 
 function initSearchBox(map) {
   const searchBoxInput = document.createElement('input');
@@ -127,13 +130,13 @@ function initS2Cells(map) {
       const newS2Cells = loadS2Cells(map);
       map.drawS2Cells(newS2Cells);
     }, 800);
-  }
+  };
 
   map.cancelS2CellUpdate = function () {
     if (map.pendingS2CellUpdate) {
       clearTimeout(map.pendingS2CellUpdate);
     }
-  }
+  };
 
   map.shouldDisplayCellLevel = function (level) {
     let cellLevelLimit;
@@ -143,9 +146,9 @@ function initS2Cells(map) {
       cellLevelLimit = level;
     }
 
-    if (isMobile() && (cellLevelLimit > 0)) cellLevelLimit -= 1;
+    if (Utils.isMobile() && (cellLevelLimit > 0)) cellLevelLimit -= 1;
     return map.getZoom() >= cellLevelLimit;
-  }
+  };
 
   google.maps.event.addListener(map, 'idle', map.updateS2Cells);
   google.maps.event.addListener(map, 'bounds_changed', map.cancelS2CellUpdate);
@@ -185,7 +188,7 @@ function initParks(map) {
       parksLayer.addGeoJson(parks);
       parksLayer.setStyle({
         fillColor: 'green'
-  	  });
+      });
 
       parksLayer.show = function (show) {
         if (show === false) {
@@ -193,13 +196,14 @@ function initParks(map) {
         } else {
           parksLayer.setMap(map);
         }
-      }
+      };
 
       map.parksLayer = parksLayer;
       map.parksLayer.show(Settings.get('showParks'));
     });
 }
 
+/* eslint-disable quotes */
 function initSettings(map) {
   google.maps.event.addListener(map, 'click', function () {
     $('.settings').collapse('hide');
@@ -283,7 +287,7 @@ function initSettings(map) {
 
     $("[name='select-s2-cells']").html(s2CellLevelOptions);
     $("[name='select-s2-cells']").selectpicker('val', Settings.get('s2Cells'));
-    $("[name='select-s2-cells']").selectpicker('refresh')
+    $("[name='select-s2-cells']").selectpicker('refresh');
   }
 
   setS2CellLevelOptions();
@@ -301,6 +305,7 @@ function initSettings(map) {
 
   $('.select-s2-cells-wrapper .bs-select-all').prop('disabled', true);
 }
+/* eslint-enable quotes */
 
 function loadAndDrawFeatureDataIncrementally(map) {
   const chunkSize = 250;
@@ -373,10 +378,11 @@ function loadFeatures(featureData) {
         !feature.latitude ||
         !feature.longitude) {
       return;
-    };
+    }
 
     feature.type = feature.type.toLowerCase();
-    feature.location = coordinateToLatLng([feature.latitude, feature.longitude]);
+    feature.coords = [feature.latitude, feature.longitude];
+    feature.location = Utils.coordinateToLatLng(feature.coords);
     feature.permalinkName = feature.id;
     feature.permalink = `${baseURL}?${feature.type}=${feature.id}`;
 
@@ -435,11 +441,6 @@ function loadFeatures(featureData) {
 
 function loadParkData() {
   return Promise.resolve($.getJSON('/data/parks.geojson'));
-}
-
-function zoomToFeature(map, feature, zoom) {
-  map.panTo(feature.location);
-  map.setZoom(zoom || 17);
 }
 
 function drawFeature(map, feature) {
@@ -601,7 +602,7 @@ function loadS2Cells(map) {
   const northEast = S2.S2LatLng.fromDegrees(neBound.lat(), neBound.lng());
   const screenRegion = S2.S2LatLngRect.fromLatLng(southWest, northEast);
 
-  const s2Cells = []
+  const s2Cells = [];
   $.each(Settings.get('s2Cells'), function (index, level) {
     if (!map.shouldDisplayCellLevel(level)) return;
 
@@ -654,7 +655,7 @@ function drawS2Cell(map, s2Cell) {
     return {
       lat: s2LatLng.latDegrees.toNumber(),
       lng: s2LatLng.lngDegrees.toNumber()
-    }
+    };
   }
 
   const verticies = [
@@ -675,13 +676,4 @@ function drawS2Cell(map, s2Cell) {
     fillOpacity: 0,
     zIndex: 120 - s2Cell.level
   });
-}
-
-function coordinateToLatLng(coord) {
-  return new google.maps.LatLng(coord[0], coord[1]);
-}
-
-function isMobile() {
-  const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-  return mobileRegex.test(navigator.userAgent);
 }

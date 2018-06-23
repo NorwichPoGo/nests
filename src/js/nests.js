@@ -1,5 +1,8 @@
 'use strict';
 
+const Settings = require('./settings');
+const Utils = require('./utils');
+
 const migrationDates = [
   new Date(2018, 4, 19),
   new Date(2018, 4, 5),
@@ -40,13 +43,13 @@ window.initMap = () => {
 
   initNests(map);
   initSettings(map);
-}
+};
 
 function initNests(map) {
   loadNestData()
     /* If a nest is given as a URL parameter then zoom to it. */
     .then(function (nestData) {
-      const centerNestName = urlParameter('nest');
+      const centerNestName = Utils.urlParameter('nest');
       if (centerNestName) {
         let centerNest;
         $.each(nestData, function (nestId, nest) {
@@ -121,31 +124,32 @@ function loadNestData() {
     .then(function (nestData) {
       return Promise.resolve($.getJSON('/data/manual_nests.json'))
         .then(function (manualNestData) {
-          return Object.assign(nestData, manualNestData);;
+          return Object.assign(nestData, manualNestData);
         });
     })
     .then(function (nestData) {
       $.each(nestData, function (nestId, nest) {
-        nest.center = coordinateToLatLng(nest.center);
+        nest.center = Utils.coordinateToLatLng(nest.center);
 
         nest.region = $.map(nest.region, function (coord) {
-          return coordinateToLatLng(coord);
+          return Utils.coordinateToLatLng(coord);
         });
 
         nest.permalinkName = nest.name
-            .replace(/[^\w]/g, '')
-            .toLowerCase();
+          .replace(/[^\w]/g, '')
+          .toLowerCase();
       });
 
       return nestData;
     });
 }
 
-function loadMigrationData(nestData) {
+function loadMigrationData() {
   return Promise.all($.map(migrationDates, function (date) {
-    const migrationFile = `/data/nest_migrations/${dateToString(date)}.json`;
+    const dateStr = Utils.dateToString(date);
+    const migrationFile = `/data/nest_migrations/${dateStr}.json`;
     return Promise.resolve($.getJSON(migrationFile));
-  }))
+  }));
 }
 
 function loadPokemonData() {
@@ -199,7 +203,7 @@ function drawNest(map, nest) {
 
 function nestRegion(nest) {
   let nestColor = 'green';
-  if (nest.date_added == dateToString(nestUpdates[0])) {
+  if (nest.date_added == Utils.dateToString(nestUpdates[0])) {
     nestColor = 'blue';
   }
 
@@ -244,7 +248,7 @@ function nestLabel(nest) {
   }
 
   const allNestingPokemon = $.map(migrationDates, function (date, index) {
-    const dateStr = (index == 0) ? 'Current' : dateToString(date);
+    const dateStr = (index == 0) ? 'Current' : Utils.dateToString(date);
     const pokemon = nestMigrationData(nest, date);
 
     return `
@@ -256,7 +260,7 @@ function nestLabel(nest) {
   const baseURL = location.protocol + '//' + location.host + location.pathname;
   const permaLink = `${baseURL}?nest=${nest.permalinkName}`;
 
-  let spawnpointCount
+  let spawnpointCount;
   if (nest.spawnpoints) {
     if (nest.spawnpoints > 1) {
       spawnpointCount = `${nest.spawnpoints} spawnpoints`;
@@ -291,18 +295,4 @@ function nestMigrationData(nest, migration) {
       (nest.migrations[migration]['id'] > 0)) {
     return nest.migrations[migration];
   }
-}
-
-function coordinateToLatLng(ooord) {
-  return new google.maps.LatLng(ooord[0], ooord[1]);
-}
-
-function dateToString(date) {
-    function pad(n) {
-      return (n < 10) ? '0' + n : n;
-    }
-
-    return pad(date.getFullYear()) + '-' +
-           pad(date.getMonth()) + '-' +
-           pad(date.getDate());
 }
