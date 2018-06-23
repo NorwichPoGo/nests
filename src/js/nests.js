@@ -1,3 +1,5 @@
+'use strict';
+
 const migrationDates = [
   new Date(2018, 4, 19),
   new Date(2018, 4, 5),

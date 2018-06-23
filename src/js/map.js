@@ -1,3 +1,5 @@
+'use strict';
+
 window.initMap = () => {
   const map = new google.maps.Map(document.getElementById('map'), {
     center: Settings.get('mapCenter'),
