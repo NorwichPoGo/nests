@@ -10,28 +10,37 @@ module.exports = grunt => {
         '!src/js/vendor/**/*.js'
       ]
     },
-    babel: {
+    browserify: {
       options: {
-        sourceMap: true,
-        presets: [
-          [
-            'env',
-            {
-              'targets': {
-                'browsers': ['>0.5%']
-              }
-            }
-          ]
-        ]
+        transform: [['babelify', { presets: 'es2015' }]],
+        browserifyOptions: {
+          debug: true
+        }
       },
       build: {
         files: [{
           expand: true,
           cwd: 'src/js',
-          src: '**/*.js',
+          src: [
+            '**/*.js',
+            '!vendor/**/*.js'
+          ],
           dest: 'assets/js',
           rename: (dst, src) => {
             return dst + '/' + src.replace(/.js$/, '.built.js');
+          }
+        }]
+      }
+    },
+    copy: {
+      build: {
+        files: [{
+          expand: true,
+          cwd: 'src/js/vendor',
+          src: '**/*.js',
+          dest: 'assets/js/vendor',
+          rename: (dst, src) => {
+            return dst + '/' + src.replace(/.js$/, '.min.js');
           }
         }]
       }
@@ -61,12 +70,12 @@ module.exports = grunt => {
   });
 
   grunt.loadNpmTasks('gruntify-eslint');
-  grunt.loadNpmTasks('grunt-babel');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-clean');
 
   grunt.registerTask('default', 'build');
   grunt.registerTask('lint', 'eslint');
-  grunt.registerTask('build', ['clean', 'babel', 'uglify']);
+  grunt.registerTask('build', ['clean', 'browserify', 'copy', 'uglify']);
 };
