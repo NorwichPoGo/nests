@@ -1,7 +1,9 @@
 {
     "env": {
         "es6": true,
-        "node": true
+        "node": true,
+        "browser": true,
+        "jquery": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -30,5 +32,10 @@
         "no-unused-vars": [
             "warn"
         ]
+    },
+    "globals": {
+        "google": true,
+        "Fuse": true,
+        "S2": true
     }
 }
