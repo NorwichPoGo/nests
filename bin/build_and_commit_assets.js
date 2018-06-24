@@ -17,7 +17,7 @@ const checkForUncommittedChanges = () => {
     });
 };
 
-const buildAndPushAssets = () => {
+const buildAndCommitAssets = () => {
   checkForStagedFiles()
     .then(stagedFiles => {
       if (stagedFiles) {
@@ -48,9 +48,6 @@ const buildAndPushAssets = () => {
           })
           .then(() => {
             return git.commit('Automatic asset rebuild.');
-          })
-          .then(() => {
-            return git.push('origin', 'master');
           });
       });
     })
@@ -60,4 +57,4 @@ const buildAndPushAssets = () => {
     });
 };
 
-buildAndPushAssets();
+buildAndCommitAssets();
