@@ -11,12 +11,16 @@
         <span class="sr-only">Toggle settings</span>
         <span class="glyphicon glyphicon-cog"></span>
       </button>
-      <a class="navbar-brand" href="/">{{ site.title }}</a>
+      <a class="navbar-brand" href="{{ site.data.routes.home }}">{{ site.title }}</a>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li><a href="/map">Map</a></li>
-        <li><a href="/nests">Nests</a></li>
+        {%- capture navbar_links_file -%}{{ 'nav_links.html' }}{%- endcapture -%}
+        {%- capture navbar_links -%}{%- include {{ navbar_links_file }} -%}{%- endcapture -%}
+        {%- assign navbar_link_lines = navbar_links | newline_to_br | strip_newlines | split: '<br />' -%}
+        {% for line in navbar_link_lines %}
+        {{ line }}
+        {%- endfor- %}
       </ul>
       <div class="nav navbar-nav navbar-right">
         <button id="settings-toggle" type="button" class="settings-toggle collapsed" data-toggle="collapse" data-target=".settings" aria-expanded="false" aria-controls="settings">

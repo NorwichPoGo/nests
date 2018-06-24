@@ -1,0 +1,7 @@
+home: /
+map: "/map"
+mapData: /map/data
+nests: /nests
+nestsData: /nests/data
+apiDocs: /docs
+repo: https://github.com/norwichpogo/norwichpogo.github.io
