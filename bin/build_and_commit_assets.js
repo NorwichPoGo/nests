@@ -42,12 +42,18 @@ const buildAndCommitAssets = () => {
       require('../Gruntfile')(grunt);
 
       grunt.tasks('build', {}, () => {
-        Promise.resolve()
-          .then(() => {
-            return git.add('assets/js');
-          })
-          .then(() => {
-            return git.commit('Automatic asset rebuild.');
+        checkForStagedFiles()
+          .then(stagedFiles => {
+            if (!stagedFiles) return;
+
+            return git.add('assets/js')
+              .then(() => {
+                return git.commit('Automatic asset rebuild.');
+              })
+              .catch(error => {
+                console.log(error);
+                process.exit(1);
+              });
           });
       });
     })
