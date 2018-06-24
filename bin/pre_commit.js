@@ -3,9 +3,10 @@
 const git = require('simple-git/promise')();
 
 const checkForSourceChanges = () => {
-  return git.diffSummary('--cached', '--name-only', 'HEAD')
+  return git.raw(['diff-index', '--cached', '--name-only', 'HEAD'])
     .then(diff => {
-      return diff.files.find(change => change.file.match(/^src\/js/));
+      const changedFiles = (diff ? diff.split('\n') : []);
+      return changedFiles.find(filename => filename.match(/^src\/js/));
     });
 };
 
@@ -18,7 +19,8 @@ checkForSourceChanges()
       'This commit includes an update to the source files, so an asset ' +
       'rebuild is required.\n' +
       'Please rebuild the assets and commit them manually, or run ' +
-      '\'npm run commitassets\' to run the automatic build and commit script.' +
+      '\'npm run commitassets\'\n' +
+      'to run the automatic build and commit script.' +
       '\n'
     );
   })
