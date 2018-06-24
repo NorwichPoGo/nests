@@ -9,7 +9,7 @@
     "lint": "grunt lint",
     "build": "grunt build",
     "watch": "grunt watch",
-    "commitassets": "node bin/build_and_push_assets.js",
+    "commitassets": "node bin/build_and_commit_assets.js",
     "precommit": "node bin/pre_commit.js"
   },
   "dependencies": {},
