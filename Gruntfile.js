@@ -1,3 +1,7 @@
+'use strict';
+
+const webpackConfig = require('./webpack.config');
+
 module.exports = grunt => {
   grunt.initConfig({
     eslint: {
@@ -11,27 +15,9 @@ module.exports = grunt => {
         'bin/**/*.js'
       ]
     },
-    browserify: {
-      options: {
-        transform: [['babelify', { presets: 'es2015' }]],
-        browserifyOptions: {
-          debug: true
-        }
-      },
-      build: {
-        files: [{
-          expand: true,
-          cwd: 'src/js',
-          src: [
-            '**/*.js',
-            '!vendor/**/*.js'
-          ],
-          dest: 'assets/js',
-          rename: (dst, src) => {
-            return dst + '/' + src.replace(/.js$/, '.built.js');
-          }
-        }]
-      }
+    webpack: {
+      build: webpackConfig,
+      watch: Object.assign({ watch: true }, webpackConfig)
     },
     copy: {
       build: {
@@ -46,37 +32,18 @@ module.exports = grunt => {
         }]
       }
     },
-    uglify: {
-      options: {
-        sourceMap: true,
-        compress: {
-          unused: false
-        }
-      },
-      build: {
-        files: [{
-          expand: true,
-          cwd: 'assets/js',
-          src: '**/*.built.js',
-          dest: 'assets/js',
-          rename: (dst, src) => {
-            return dst + '/' + src.replace(/.built.js$/, '.min.js');
-          }
-        }]
-      }
-    },
     clean: {
       build: 'assets/js'
-    },
+    }
   });
 
   grunt.loadNpmTasks('gruntify-eslint');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-webpack');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('default', 'build');
   grunt.registerTask('lint', 'eslint');
-  grunt.registerTask('build', ['clean', 'browserify', 'copy', 'uglify']);
+  grunt.registerTask('build', ['clean', 'webpack:build', 'copy']);
+  grunt.registerTask('watch', 'webpack:watch');
 };

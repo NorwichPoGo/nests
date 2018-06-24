@@ -2,51 +2,51 @@
 
 const Utils = require('./utils');
 
-class Settings {
-  get(settingName) {
-    const setting = Settings.settings[settingName];
-    let rawSettingValue = localStorage.getItem(settingName);
+const Settings = {};
 
-    if (setting.getURLValue === undefined) {
-      setting.getURLValue = function () {
-        return Utils.urlParameter(settingName);
-      };
-    }
+Settings.get = settingName => {
+  const setting = Settings.settings[settingName];
+  let rawSettingValue = localStorage.getItem(settingName);
 
-    if (setting.getURLValue && setting.getURLValue != false) {
-      const urlValue = setting.getURLValue();
-      if (urlValue) {
-        rawSettingValue = urlValue;
-      }
-    }
-
-    if (rawSettingValue === undefined || rawSettingValue === null) {
-      return setting.defaultValue;
-    }
-
-    if (setting.type == 'boolean') {
-      return rawSettingValue == 'true';
-    } else if (setting.type == 'float') {
-      return parseFloat(rawSettingValue);
-    } else if (setting.type == 'json') {
-      return JSON.parse(rawSettingValue);
-    }
-
-    return rawSettingValue;
+  if (setting.getURLValue === undefined) {
+    setting.getURLValue = function () {
+      return Utils.urlParameter(settingName);
+    };
   }
 
-  set(settingName, value) {
-    const setting = Settings.settings[settingName];
-
-    setting.getURLValue = false;
-
-    if (setting.type == 'json') {
-      localStorage.setItem(settingName, JSON.stringify(value));
-    } else {
-      localStorage.setItem(settingName, value);
+  if (setting.getURLValue && setting.getURLValue != false) {
+    const urlValue = setting.getURLValue();
+    if (urlValue) {
+      rawSettingValue = urlValue;
     }
   }
-}
+
+  if (rawSettingValue === undefined || rawSettingValue === null) {
+    return setting.defaultValue;
+  }
+
+  if (setting.type == 'boolean') {
+    return rawSettingValue == 'true';
+  } else if (setting.type == 'float') {
+    return parseFloat(rawSettingValue);
+  } else if (setting.type == 'json') {
+    return JSON.parse(rawSettingValue);
+  }
+
+  return rawSettingValue;
+};
+
+Settings.set = (settingName, value) => {
+  const setting = Settings.settings[settingName];
+
+  setting.getURLValue = false;
+
+  if (setting.type == 'json') {
+    localStorage.setItem(settingName, JSON.stringify(value));
+  } else {
+    localStorage.setItem(settingName, value);
+  }
+};
 
 Settings.settings = {
   showGyms: {
