@@ -20,8 +20,8 @@ const buildCommitAndPushAssets = () => {
   });
 };
 
-module.export = buildCommitAndPushAssets;
-
 if (require.main === module) {
   buildCommitAndPushAssets();
 }
+
+module.exports = buildCommitAndPushAssets;
