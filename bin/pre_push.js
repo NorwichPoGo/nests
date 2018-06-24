@@ -5,14 +5,12 @@ const git = require('simple-git/promise')();
 const checkForSourceChanges = () => {
   return git.diffSummary('origin/master', 'master')
     .then(diff => {
-      console.log(diff);
       return diff.files.find(change => change.file.match(/^src\/js/));
     });
 };
 
 checkForSourceChanges()
   .then(sourceChanged => {
-    console.log(sourceChanged);
     if (sourceChanged) {
       console.log(
         '\n' +
@@ -25,6 +23,5 @@ checkForSourceChanges()
     }
   })
   .catch(error => {
-    console.log(error);
     process.exit(1);
   });
