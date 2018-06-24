@@ -9,6 +9,7 @@
     "lint": "grunt lint",
     "build": "grunt build",
     "watch": "grunt watch",
+    "pushassets": "node bin/build_and_push_assets.js",
     "prepush": "node bin/pre_push.js"
   },
   "dependencies": {},
