@@ -1,7 +1,7 @@
 module.exports = {
   entry: {
-    map: './src/js/map.js',
-    nests: './src/js/nests.js'
+    map: './lib/map.js',
+    nests: './lib/nests.js'
   },
   output: {
     path: `${__dirname}/assets/js`,

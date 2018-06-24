@@ -10,8 +10,8 @@ module.exports = grunt => {
       },
       src: [
         'Gruntfile.js',
-        'src/js/**/*.js',
-        '!src/js/vendor/**/*.js',
+        'lib/**/*.js',
+        '!lib/vendor/**/*.js',
         'bin/**/*.js'
       ]
     },
@@ -23,7 +23,7 @@ module.exports = grunt => {
       build: {
         files: [{
           expand: true,
-          cwd: 'src/js/vendor',
+          cwd: 'lib/vendor',
           src: '**/*.js',
           dest: 'assets/js/vendor',
           rename: (dst, src) => {
