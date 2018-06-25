@@ -1,0 +1,33 @@
+---
+---
+
+@import "search_box";
+
+#map {
+  position: absolute;
+  top: 50px;
+  bottom: 0px;
+  width: 100%;
+}
+
+.pac-icon-portal {
+  background-image: url('/assets/images/portal_gs.png');
+}
+
+.pac-icon-pokestop {
+  background-image: url('/assets/images/pokestop_gs.png');
+}
+
+.pac-icon-gym {
+  background-image: url('/assets/images/gym_gs.png');
+}
+
+.feature-label {
+  font-size: 10pt;
+  max-width: 250px;
+}
+
+.feature-label-name {
+  font-size: 12pt;
+  padding-bottom: 4px;
+}
