@@ -39,12 +39,12 @@
   background-color: #333;
 }
 
-.settings-toggle-mobile .glyphicon {
+.settings-toggle-mobile .fa-cog {
   display: block;
   width: 22px;
-  height: 14px;
-  border-radius: 1px;
-  color: #ffffff;
+  height: 14px !important;
+  border-radius: 1px !important;
+  color: #fff !important;
 }
 
 @media (max-width: 767px) {
