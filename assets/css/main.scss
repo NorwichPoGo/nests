@@ -1,6 +1,3 @@
----
----
-
 html, body {
   height: 100%;
   margin: 0;
@@ -8,9 +5,17 @@ html, body {
   overflow: hidden;
 }
 
+$navbar-height: 50px;
+$navbar-height-large: 60px;
+
 body {
-  padding-top: 50px;
+  padding-top: $navbar-height;
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-top: $navbar-height-large;
+  }
 }
 
 @import "navbar";
-@import "settings";

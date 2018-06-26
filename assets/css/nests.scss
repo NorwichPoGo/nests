@@ -1,13 +1,20 @@
 ---
 ---
 
+@import "main";
 @import "search_box";
 
 #map {
   position: absolute;
-  top: 50px;
+  top: $navbar-height;
   bottom: 0px;
   width: 100%;
+}
+
+@media (min-width: 768px) {
+  #map {
+    top: $navbar-height-large;
+  }
 }
 
 .nest-label {

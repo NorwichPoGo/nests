@@ -7,7 +7,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <button id="settings-toggle-mobile" type="button" class="settings-toggle collapsed" data-toggle="collapse" data-target=".settings" aria-expanded="false" aria-controls="settings">
+      <button type="button" class="settings-toggle-mobile collapsed" data-toggle="collapse" data-target=".settings" aria-expanded="false" aria-controls="settings">
         <span class="sr-only">Toggle settings</span>
         <span class="glyphicon glyphicon-cog"></span>
       </button>
@@ -22,13 +22,13 @@
         {{ line }}
         {%- endfor- %}
       </ul>
-      <div class="nav navbar-nav navbar-right">
-        <button id="settings-toggle" type="button" class="settings-toggle collapsed" data-toggle="collapse" data-target=".settings" aria-expanded="false" aria-controls="settings">
-          <span class="sr-only">Toggle settings</span>
-          <span class="glyphicon glyphicon-cog pull-left"></span>
-          <span class="pull-right glyphicon-label">Settings</span>
-        </button>
-      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="#" class="collapsed" data-toggle="collapse" data-target=".settings" aria-expanded="false" aria-controls="settings">
+            <div class="icon"><i class="glyphicon glyphicon-cog"></i></div>Settings
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>

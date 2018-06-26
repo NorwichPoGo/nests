@@ -1,14 +1,4 @@
-.settings-toggle {
-  position: relative;
-  float: right;
-  padding: 14px;
-  background-color: transparent;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-}
-
-#settings-toggle-mobile {
+.settings-toggle-mobile {
   position: relative;
   float: right;
   padding: 9px 10px;
@@ -17,57 +7,29 @@
   margin-bottom: 8px;
   background-color: transparent;
   background-image: none;
-  border: 1px solid transparent;
+  border: 1px solid #333;
   border-radius: 4px;
 }
 
-.settings-toggle:focus {
+.settings-toggle-mobile:focus {
   outline: 0;
 }
 
-.settings-toggle .glyphicon {
+.settings-toggle-mobile:hover,
+.settings-toggle-mobile:focus {
+  background-color: #333;
+}
+
+.settings-toggle-mobile .glyphicon {
   display: block;
   width: 22px;
   height: 14px;
   border-radius: 1px;
-}
-
-#settings-toggle .glyphicon:before {
-  vertical-align: middle;
-}
-
-#settings-toggle .glyphicon {
-  top: -1px;
-  color: #9d9d9d;
-}
-
-#settings-toggle-mobile .glyphicon {
   color: #ffffff;
 }
 
-.settings-toggle .glyphicon-label {
-  color: #9d9d9d;
-}
-
-.navbar-inverse .settings-toggle {
-  border-color: #333;
-}
-
-.navbar-inverse .settings-toggle:hover,
-.navbar-inverse .settings-toggle:focus {
-  background-color: #333;
-}
-
-#settings-toggle {
-  display: none;
-}
-
 @media (min-width: 768px) {
-  #settings-toggle {
-    display: block;
-  }
-
-  #settings-toggle-mobile {
+  .settings-toggle-mobile {
     display: none;
   }
 }

@@ -25,15 +25,28 @@
   }
 }
 
+.navbar-brand,
+.navbar-nav > li > a {
+  line-height: $navbar-height;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+@media (min-width: 768px) {
+  .navbar-brand,
+  .navbar-nav > li > a {
+    line-height: $navbar-height-large;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+.navbar-collapse.collapsing .navbar-nav > li,
 .navbar-collapse.collapse.in .navbar-nav > li {
   margin-left: 10px;
 
-  > a {
-    line-height: 35px;
-
-    > .icon {
-      width: 20px;
-      text-align: right;
-    }
+  > a > .icon {
+    width: 20px;
+    text-align: right;
   }
 }
