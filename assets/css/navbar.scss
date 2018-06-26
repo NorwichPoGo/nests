@@ -1,0 +1,39 @@
+.navbar-inverse {
+  .navbar-brand {
+    color: #eeeeee;
+    font-size: 20px;
+  }
+
+  .navbar-brand:hover,
+  .navbar-brand:focus {
+    color: #fff;
+    background-color: transparent;
+  }
+
+  .navbar-nav > li > a {
+    color: #cdcdcd;
+  }
+}
+
+.navbar .navbar-nav > li {
+  margin-left: 15px;
+  font-size: 16px;
+
+  > a > .icon {
+    display: inline-block;
+    margin-right: 7px;
+  }
+}
+
+.navbar-collapse.collapse.in .navbar-nav > li {
+  margin-left: 10px;
+
+  > a {
+    line-height: 35px;
+
+    > .icon {
+      width: 20px;
+      text-align: right;
+    }
+  }
+}

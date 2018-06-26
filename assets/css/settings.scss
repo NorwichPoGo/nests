@@ -1,0 +1,95 @@
+.settings-toggle {
+  position: relative;
+  float: right;
+  padding: 14px;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+#settings-toggle-mobile {
+  position: relative;
+  float: right;
+  padding: 9px 10px;
+  margin-top: 8px;
+  margin-right: 15px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.settings-toggle:focus {
+  outline: 0;
+}
+
+.settings-toggle .glyphicon {
+  display: block;
+  width: 22px;
+  height: 14px;
+  border-radius: 1px;
+}
+
+#settings-toggle .glyphicon:before {
+  vertical-align: middle;
+}
+
+#settings-toggle .glyphicon {
+  top: -1px;
+  color: #9d9d9d;
+}
+
+#settings-toggle-mobile .glyphicon {
+  color: #ffffff;
+}
+
+.settings-toggle .glyphicon-label {
+  color: #9d9d9d;
+}
+
+.navbar-inverse .settings-toggle {
+  border-color: #333;
+}
+
+.navbar-inverse .settings-toggle:hover,
+.navbar-inverse .settings-toggle:focus {
+  background-color: #333;
+}
+
+#settings-toggle {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  #settings-toggle {
+    display: block;
+  }
+
+  #settings-toggle-mobile {
+    display: none;
+  }
+}
+
+.settings-wrapper {
+  position: fixed;
+  right: 0;
+  height: 100%;
+  background-color: #ffffff;
+  background-image: none;
+}
+
+.settings {
+  width: 280px;
+  height: 100%;
+}
+
+.settings.collapsing {
+  width: 0;
+  height: auto;
+  -webkit-transition: width .35s ease-in-out, visibility .35s ease-in-out;
+     -moz-transition: width .35s ease-in-out, visibility .35s ease-in-out;
+       -o-transition: width .35s ease-in-out, visibility .35s ease-in-out;
+          transition: width .35s ease-in-out, visibility .35s ease-in-out;
+}
