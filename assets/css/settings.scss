@@ -1,3 +1,22 @@
+.settings-toggle {
+  line-height: calc(#{$navbar-height-large} - 32px) !important;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+
+.settings-toggle:focus {
+  outline: 0 !important;
+}
+
+.settings-toggle:hover,
+.settings-toggle:focus {
+  background-color: #333 !important;
+}
+
 .settings-toggle-mobile {
   position: relative;
   float: right;
@@ -26,6 +45,12 @@
   height: 14px;
   border-radius: 1px;
   color: #ffffff;
+}
+
+@media (max-width: 767px) {
+  .settings-toggle {
+    display: none !important;
+  }
 }
 
 @media (min-width: 768px) {
