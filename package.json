@@ -9,6 +9,7 @@
     "lint": "grunt lint",
     "build": "grunt build",
     "watch": "grunt watch",
+    "favicons": "grunt favicons",
     "commitassets": "node bin/build_and_commit_assets.js",
     "precommit": "node bin/pre_commit.js"
   },
@@ -20,6 +21,7 @@
     "grunt": "^1.0.2",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-real-favicon": "^0.2.2",
     "grunt-webpack": "^3.1.2",
     "gruntify-eslint": "^4.0.0",
     "husky": "^0.14.3",
