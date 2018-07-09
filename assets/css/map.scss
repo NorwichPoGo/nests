@@ -36,27 +36,45 @@
   max-width: 250px;
 }
 
-.feature-label-name {
-  font-size: 12pt;
-  padding-bottom: 8px;
-}
-
-.feature-update {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-size: 100% 100%;
-  margin-left: 5px;
-
-  &.portal {
-    background-image: url('/assets/images/portal.png');
+.feature-label {
+  .name {
+    font-size: 12pt;
+    padding-bottom: 8px;
   }
 
-  &.pokestop {
-    background-image: url('/assets/images/pokestop.png');
+  .option-heading {
+    display: inline-block;
+    font-size: 11pt;
   }
 
-  &.gym {
-    background-image: url('/assets/images/gym.png');
+  .update-to {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    background-size: 100% 100%;
+    background-origin: content-box;
+    background-repeat: no-repeat;
+    margin-left: 5px;
+    margin-bottom: -4px;
+    padding: 4px;
+
+    &.portal {
+      background-image: url('/assets/images/portal.png');
+    }
+
+    &.pokestop {
+      background-image: url('/assets/images/pokestop.png');
+    }
+
+    &.gym {
+      background-image: url('/assets/images/gym.png');
+    }
+  }
+
+  .update-to:hover {
+    border-top: 2px solid #aaa;
+    padding-top: 2px;
+    border-bottom: 2px solid #aaa;
+    padding-bottom: 2px;
   }
 }
