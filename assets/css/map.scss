@@ -38,5 +38,25 @@
 
 .feature-label-name {
   font-size: 12pt;
-  padding-bottom: 4px;
+  padding-bottom: 8px;
+}
+
+.feature-update {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-size: 100% 100%;
+  margin-left: 5px;
+
+  &.portal {
+    background-image: url('/assets/images/portal.png');
+  }
+
+  &.pokestop {
+    background-image: url('/assets/images/pokestop.png');
+  }
+
+  &.gym {
+    background-image: url('/assets/images/gym.png');
+  }
 }
