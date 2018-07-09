@@ -39,7 +39,7 @@
 .feature-label {
   .name {
     font-size: 12pt;
-    padding-bottom: 8px;
+    padding-bottom: 10px;
   }
 
   .option-heading {
@@ -54,9 +54,10 @@
     background-size: 100% 100%;
     background-origin: content-box;
     background-repeat: no-repeat;
-    margin-left: 5px;
+    margin-left: 3px;
     margin-bottom: -4px;
     padding: 4px;
+    cursor: pointer;
 
     &.portal {
       background-image: url('/assets/images/portal.png');
