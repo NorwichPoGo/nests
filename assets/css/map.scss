@@ -38,8 +38,16 @@
 
 .feature-label {
   .name {
-    font-size: 12pt;
     padding-bottom: 10px;
+    font-size: 12pt;
+    font-weight: bold;
+  }
+
+  .ex {
+    margin: 0 4px;
+    font-size: 10pt;
+    font-style: italic;
+    font-weight: bold;
   }
 
   .option-heading {
