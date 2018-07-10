@@ -1,31 +1,28 @@
 {
-  "name": "norwichpogo",
-  "version": "1.0.0",
-  "description": "",
-  "author": "arandomoracle",
-  "license": "MIT",
-  "main": "Gruntfile.js",
-  "scripts": {
-    "lint": "grunt lint",
-    "build": "grunt build",
-    "watch": "grunt watch",
-    "favicons": "grunt favicons",
-    "commitassets": "node bin/build_and_commit_assets.js",
-    "precommit": "node bin/pre_commit.js"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.7.0",
-    "grunt": "^1.0.2",
-    "grunt-contrib-clean": "^1.1.0",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-real-favicon": "^0.2.2",
-    "grunt-webpack": "^3.1.2",
-    "gruntify-eslint": "^4.0.0",
-    "husky": "^0.14.3",
-    "simple-git": "^1.96.0",
-    "webpack": "^4.12.0"
-  }
+    "name": "norwichpogo",
+    "version": "1.0.0",
+    "description": "",
+    "author": "arandomoracle",
+    "license": "MIT",
+    "main": "Gruntfile.js",
+    "scripts": {
+        "lint": "grunt lint",
+        "build": "grunt build",
+        "watch": "grunt watch",
+        "favicons": "grunt favicons"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "babel-core": "^6.26.3",
+        "babel-loader": "^7.1.4",
+        "babel-preset-env": "^1.7.0",
+        "grunt": "^1.0.2",
+        "grunt-contrib-clean": "^1.1.0",
+        "grunt-contrib-copy": "^1.0.0",
+        "grunt-real-favicon": "^0.2.2",
+        "grunt-webpack": "^3.1.2",
+        "gruntify-eslint": "^4.0.0",
+        "husky": "^0.14.3",
+        "webpack": "^4.12.0"
+    }
 }
