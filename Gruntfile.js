@@ -26,9 +26,7 @@ module.exports = grunt => {
           cwd: 'lib/vendor',
           src: '**/*.js',
           dest: 'assets/js/vendor',
-          rename: (dst, src) => {
-            return dst + '/' + src.replace(/.js$/, '.min.js');
-          }
+          rename: (dst, src) => dst + '/' + src.replace(/.js$/, '.min.js')
         }]
       }
     },
