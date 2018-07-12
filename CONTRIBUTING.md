@@ -73,7 +73,7 @@ CSS/SASS should also use two spaces for indentation.
 ### JavaScript
 This site uses a combination of webpack and [Babel](https://babeljs.io/) to allow the use of [ES6](https://hacks.mozilla.org/category/es6-in-depth/) in the browser.
 
-You can check that you're JavaScript is formatted correctly by running:
+You can check that your JavaScript is formatted correctly by running:
 ```
 npm run lint
 ```
