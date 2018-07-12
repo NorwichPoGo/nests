@@ -2,6 +2,7 @@
 Welcome to Pokemon Go Norwich - the unofficial companion site for Pokemon Go in Norwich, UK.
 
 Discord: https://discord.gg/zqmpFJG
+
 Facebook: https://www.facebook.com/groups/1725206761053534/
 
 
@@ -30,3 +31,7 @@ New Portals are now being added to the game frequently, so to keep the map up-to
 The nests page provides a quick overview of the nests around Norwich.
 
 Trainers can report their local nests, or use the search bar to quickly find a nest.
+
+
+### Contrubuting
+If you would like to add a new feature or help resolve an [issue](https://github.com/norwichpogo/norwichpogo.github.io/issues) check out the contributing [guide](CONTRIBUTING.md).
