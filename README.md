@@ -33,5 +33,5 @@ The nests page provides a quick overview of the nests around Norwich.
 Trainers can report their local nests, or use the search bar to quickly find a nest.
 
 
-### Contrubuting
+### Contributing
 If you would like to add a new feature or help resolve an [issue](https://github.com/norwichpogo/norwichpogo.github.io/issues) check out the contributing [guide](CONTRIBUTING.md).
