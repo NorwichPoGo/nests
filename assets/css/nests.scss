@@ -3,6 +3,7 @@
 
 @import "main";
 @import "search_box";
+@import url(https://cdn.rawgit.com/pogo-excalibur/images/1f2e148b/pokemon_sprites.css);
 
 #map {
   position: absolute;
@@ -27,8 +28,91 @@
     font-weight: bold;
   }
 
-  .option-heading {
-    display: inline-block;
-    font-size: 11pt;
+  .pokemon {
+    padding-bottom: 10px;
+    font-size: 10pt;
+  }
+
+  .options {
+    font-size: 10pt;
+  }
+}
+
+.nest-report-overlay {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+
+  $popup-inset: 20px;
+  $popup-inset-x-large: 180px;
+  $popup-inset-y-large: 50px;
+
+  .nest-report-popup {
+    position: fixed;
+    left: $popup-inset;
+    right: $popup-inset;
+    top: calc(#{$navbar-height} + #{$popup-inset});
+    bottom: $popup-inset;
+    padding: 20px;
+    background-color: white;
+    border-style: solid;
+    border-color: #555;
+    border-width: 2px;
+    border-radius: 10px;
+
+    .close-icon {
+      position: absolute;
+      top: 20px;
+      right: 23px;
+      cursor: pointer;
+    }
+
+    .heading {
+      height: 30px;
+      margin-left: 30px;
+      font-size: 12pt;
+      font-weight: bold;
+    }
+
+    .selection {
+      position: relative;
+      width: 100%;
+      height: calc(100% - 30px);
+      padding-right: 20px;
+      overflow: auto;
+      text-align: center;
+
+      .pokemon {
+        display: inline-block;
+        width: 50px;
+        margin: 10px;
+        cursor: pointer;
+
+        .icon {
+          width: 50px;
+          height: 50px;
+        }
+
+        .id,
+        .name {
+          display: block;
+          font-size: 7pt;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    .nest-report-popup {
+      left: $popup-inset-x-large;
+      right: $popup-inset-x-large;
+      top: calc(#{$navbar-height-large} + #{$popup-inset-y-large});
+      bottom: $popup-inset-y-large;
+    }
   }
 }
