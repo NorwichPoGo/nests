@@ -1,5 +1,7 @@
 module.exports = {
   entry: {
+    sign_in: './lib/sign_in.js',
+    sign_in_token: './lib/sign_in_token.js',
     map: './lib/map.js',
     nests: './lib/nests.js'
   },

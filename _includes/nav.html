@@ -18,6 +18,14 @@
         {{ line }}
         {%- endfor- %}
       </ul>
+      <ul class="nav navbar-nav navbar-right">
+        {%- capture navbar_user_file -%}{{ 'nav_user.html' }}{%- endcapture -%}
+        {%- capture navbar_user -%}{%- include {{ navbar_user_file }} -%}{%- endcapture -%}
+        {%- assign navbar_user_lines = navbar_user | newline_to_br | strip_newlines | split: '<br />' -%}
+        {% for line in navbar_user_lines %}
+        {{ line }}
+        {%- endfor- %}
+      </ul>
     </div>
   </div>
 </nav>
