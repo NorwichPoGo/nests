@@ -15,18 +15,14 @@
     {%- endfor- %}
 
     {% assign content_lines = content | newline_to_br | strip_newlines | split: '<br />' %}
-    {%- if page.skip_container -%}
-    {% for line in content_lines %}
-    {{ line }}
-    {%- endfor- %}
-    {%- else -%}
-    <div class="content">
-      {% for line in content_lines %}
-      {{ line }}
-      {%- endfor -%}
-      {{ '' }}
+    <div class="content-background">
+      <div class="content">
+        {% for line in content_lines %}
+        {{ line }}
+        {%- endfor -%}
+        {{ '' }}
+      </div>
     </div>
-    {% endif %}
 
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
