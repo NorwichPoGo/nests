@@ -1,7 +1,8 @@
 home: /
-map: "/map"
+map: /map
 mapData: /map/data
 nests: /nests
 nestsData: /nests/data
-apiDocs: /docs
+signIn: /sign_in
+signOut: /sign_out
 repo: https://github.com/norwichpogo/norwichpogo.github.io

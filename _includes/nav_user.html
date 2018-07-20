@@ -1,0 +1,25 @@
+<li class="divider user-profile-divider" role="separator"></li>
+<li class="user-profile-link">
+  <a href="{{ site.data.routes.home }}">
+    <div class="icon"><i class="fas fa-user"></i></div><span class="user-profile-text">Profile</span>
+  </a>
+</li>
+<li class="user-sign-in-link">
+  <a href="{{ site.data.routes.signIn }}">
+    <div class="icon"><i class="fab fa-discord"></i></div>Sign In
+  </a>
+</li>
+<li class="user-sign-out-link">
+  <a href="{{ site.data.routes.signOut }}">
+    <div class="icon"><i class="fab fa-discord"></i></div>Sign Out
+  </a>
+</li>
+<li class="dropdown user-profile-dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">
+    <div class="icon"><i class="fas fa-user"></i></div><span class="user-profile-text">Profile</span><span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+    <li><a href="{{ site.data.routes.home }}">Profile</a></li>
+    <li><a href="{{ site.data.routes.signOut }}">Sign Out</a></li>
+  </ul>
+</li>
