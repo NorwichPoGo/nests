@@ -6,7 +6,14 @@
     if (!user || !user.id || !user.username) return;
     $('.user-sign-in-link').addClass('hidden');
     $('.user-sign-out-link').addClass('shown');
-    $('.user-profile-text').html(user.username);
+    $('.user-profile-text').html(
+      user.username
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+    );
     $('.user-profile-link').addClass('shown');
     $('.user-profile-dropdown').addClass('shown');
   });
