@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: 'en' }}">
+  {%- capture head_file -%}{{ 'head.html' }}{%- endcapture -%}
+  {%- capture head -%}{%- include {{ head_file }} page=page -%}{%- endcapture -%}
+  {%- assign head_lines = head | newline_to_br | strip_newlines | split: '<br />' -%}
+  {% for line in head_lines %}
+  {{ line }}
+  {%- endfor- %}
+  <body>
+    {%- capture navbar_file -%}{{ page.navbar | default: 'nav.html' }}{%- endcapture -%}
+    {%- capture navbar -%}{%- include {{ navbar_file }} -%}{%- endcapture -%}
+    {%- assign navbar_lines = navbar | newline_to_br | strip_newlines | split: '<br />' -%}
+    {% for line in navbar_lines %}
+    {{ line }}
+    {%- endfor- %}
+
+    {% assign content_lines = content | newline_to_br | strip_newlines | split: '<br />' %}
+    <div class="content-background">
+      <div class="content">
+        {% for line in content_lines %}
+        {{ line }}
+        {%- endfor -%}
+        {{ '' }}
+      </div>
+    </div>
+
+    {%- if page.skip_footer -%}
+    {%- else -%}
+    {%- capture footer_file -%}{{ 'footer.html' }}{%- endcapture -%}
+    {%- capture footer -%}{%- include {{ footer_file }} -%}{%- endcapture -%}
+    {%- assign footer_lines = footer | newline_to_br | strip_newlines | split: '<br />' -%}
+    {% for line in footer_lines %}
+    {{ line }}
+    {%- endfor- %}
+    {% endif %}
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    {%- if page.scripts -%}
+    {% for script in page.scripts %}
+    <script src="{{ script | replace: '&quot;', '' }}"></script>
+    {%- endfor -%}
+    {% endif %}
+
+    {%- capture user_handling_file -%}{{ 'user_handling.html' }}{%- endcapture -%}
+    {%- capture user_handling -%}{%- include {{ user_handling_file }} -%}{%- endcapture -%}
+    {%- assign user_handling_lines = user_handling | newline_to_br | strip_newlines | split: '<br />' -%}
+    {% for line in user_handling_lines %}
+    {{ line }}
+    {%- endfor- %}
+  </body>
+</html>

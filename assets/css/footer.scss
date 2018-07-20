@@ -1,0 +1,31 @@
+$footer-height: 80px;
+$footer-height-large: 80px;
+
+footer {
+  width: 100%;
+  height: $footer-height;
+  padding: 10px;
+  background-color: #000;
+  line-height: calc((#{$footer-height} - 20px) / 2);
+  color: #cdcdcd;
+  font-size: 12pt;
+  text-align: center;
+
+  a {
+    color: #cdcdcd;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+}
+
+@media (min-width: 768px) {
+  footer {
+    height: $footer-height-large;
+    line-height: calc((#{$footer-height-large} - 20px) / 2);
+    font-size: 14pt;
+  }
+}

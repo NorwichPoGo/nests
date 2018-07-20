@@ -1,0 +1,13 @@
+<script>
+  $(function () {
+    const userJson = localStorage.getItem('user');
+    if (!userJson) return;
+    const user = JSON.parse(userJson);
+    if (!user || !user.id || !user.username) return;
+    $('.user-sign-in-link').addClass('hidden');
+    $('.user-sign-out-link').addClass('shown');
+    $('.user-profile-text').html(user.username);
+    $('.user-profile-link').addClass('shown');
+    $('.user-profile-dropdown').addClass('shown');
+  });
+</script>
