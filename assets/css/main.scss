@@ -4,17 +4,23 @@ html, body {
   padding: 0;
 }
 
-$navbar-height: 50px;
-$navbar-height-large: 60px;
+@import "navbar";
+@import "footer";
 
 body {
   padding-top: $navbar-height;
+}
+
+.container {
+  min-height: calc(100% - #{$footer-height});
 }
 
 @media (min-width: 768px) {
   body {
     padding-top: $navbar-height-large;
   }
-}
 
-@import "navbar";
+  .container {
+    min-height: calc(100% - #{$footer-height-large});
+  }
+}

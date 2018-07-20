@@ -3,6 +3,8 @@ map: /map
 mapData: /map/data
 nests: /nests
 nestsData: /nests/data
+termsAndConditions: /terms_and_conditions
+privacyPolicy: /privacy_policy
 signIn: /sign_in
 signOut: /sign_out
 repo: https://github.com/norwichpogo/norwichpogo.github.io

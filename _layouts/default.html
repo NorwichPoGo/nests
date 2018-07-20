@@ -28,6 +28,16 @@
     </div>
     {% endif %}
 
+    {%- if page.skip_footer -%}
+    {%- else -%}
+    {%- capture footer_file -%}{{ 'footer.html' }}{%- endcapture -%}
+    {%- capture footer -%}{%- include {{ footer_file }} -%}{%- endcapture -%}
+    {%- assign footer_lines = footer | newline_to_br | strip_newlines | split: '<br />' -%}
+    {% for line in footer_lines %}
+    {{ line }}
+    {%- endfor- %}
+    {% endif %}
+
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     {%- if page.scripts -%}
