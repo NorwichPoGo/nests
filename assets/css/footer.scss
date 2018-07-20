@@ -1,4 +1,4 @@
-$footer-height: 80px;
+$footer-height: 60px;
 $footer-height-large: 80px;
 
 footer {
@@ -8,7 +8,7 @@ footer {
   background-color: #000;
   line-height: calc((#{$footer-height} - 20px) / 2);
   color: #cdcdcd;
-  font-size: 12pt;
+  font-size: 10pt;
   text-align: center;
 
   a {
@@ -26,6 +26,6 @@ footer {
   footer {
     height: $footer-height-large;
     line-height: calc((#{$footer-height-large} - 20px) / 2);
-    font-size: 14pt;
+    font-size: 12pt;
   }
 }
