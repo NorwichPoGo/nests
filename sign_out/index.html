@@ -2,8 +2,12 @@
   <head></head>
   <body>
     <script>
-      localStorage.setItem('discordToken', JSON.stringify({}));
-      localStorage.setItem('user', JSON.stringify({}));
+      const acceptCookies = localStorage.getItem('acceptCookies');
+      if (acceptCookies === 'true') {
+        localStorage.setItem('discordToken', JSON.stringify({}));
+        localStorage.setItem('user', JSON.stringify({}));
+      }
+
       window.location.href = '/';
     </script>
   </body>

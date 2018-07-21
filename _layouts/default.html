@@ -38,6 +38,13 @@
     {%- endfor- %}
     {% endif %}
 
+    {%- capture cookie_notice_file -%}{{ 'cookie_notice.html' }}{%- endcapture -%}
+    {%- capture cookie_notice -%}{%- include {{ cookie_notice_file }} -%}{%- endcapture -%}
+    {%- assign cookie_notice_lines = cookie_notice | newline_to_br | strip_newlines | split: '<br />' -%}
+    {% for line in cookie_notice_lines %}
+    {{ line }}
+    {%- endfor- %}
+
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     {%- if page.scripts -%}
