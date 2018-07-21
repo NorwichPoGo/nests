@@ -1,9 +1,26 @@
 <script>
   $(function () {
+    const cookieNotice = $('.cookie-notice');
+    const acceptCookies = localStorage.getItem('acceptCookies');
+
+    if (acceptCookies !== 'true' && acceptCookies !== 'false') {
+      cookieNotice.show();
+    }
+
+    $('.cookie-notice .accept').click(function () {
+      cookieNotice.hide();
+      localStorage.setItem('acceptCookies', 'true');
+    });
+    $('.cookie-notice .reject').click(function () {
+      cookieNotice.hide();
+      localStorage.setItem('acceptCookies', 'false');
+    });
+
     const userJson = localStorage.getItem('user');
     if (!userJson) return;
     const user = JSON.parse(userJson);
     if (!user || !user.id || !user.username) return;
+
     $('.user-sign-in-link').addClass('hidden');
     $('.user-sign-out-link').addClass('shown');
     $('.user-profile-text').html(
