@@ -3,7 +3,7 @@ module.exports = {
     sign_in: './lib/auth/sign_in.js',
     sign_in_token: './lib/auth/sign_in_token.js',
     map: './lib/map/map.js',
-    nests: './lib/nests/nests.js'
+    nests: './lib/nests/map.js'
   },
   output: {
     path: `${__dirname}/assets/js`,
