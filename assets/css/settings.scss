@@ -2,6 +2,7 @@
   line-height: calc(#{$navbar-height-large} - 32px) !important;
   margin-top: 10px;
   margin-bottom: 10px;
+  margin-right: 15px;
   padding-top: 5px !important;
   padding-bottom: 5px !important;
   border: 1px solid #333;
@@ -18,16 +19,12 @@
 }
 
 .settings-toggle-mobile {
-  position: relative;
   float: right;
-  padding: 9px 10px;
-  margin-top: 8px;
-  margin-right: 15px;
-  margin-bottom: 8px;
   background-color: transparent;
   background-image: none;
   border: 1px solid #333;
   border-radius: 4px;
+  margin-right: 8px;
 }
 
 .settings-toggle-mobile:focus {
@@ -37,14 +34,6 @@
 .settings-toggle-mobile:hover,
 .settings-toggle-mobile:focus {
   background-color: #333;
-}
-
-.settings-toggle-mobile .fa-cog {
-  display: block;
-  width: 22px;
-  height: 14px !important;
-  border-radius: 1px !important;
-  color: #fff !important;
 }
 
 @media (max-width: 767px) {
