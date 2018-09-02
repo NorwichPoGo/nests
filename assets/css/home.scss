@@ -2,3 +2,84 @@
 ---
 
 @import "main";
+@import "navbar";
+
+.top-panel {
+  text-align: center;
+  background: url(/assets/images/pokeball.png) no-repeat, #f3f3f3;
+  background-position: center 62px;
+  background-size: auto 240px;
+  min-height: 365px;
+
+  .title {
+    display: inline-block;
+    margin: 0 auto;
+    width: 225px;
+  }
+
+  .subtitle {
+    display: inline-block;
+    margin: 70px auto 0 auto;
+    width: 225px;
+  }
+
+  .social-links {
+    margin-top: 40px;
+    margin-bottom: 0;
+
+    li {
+      font-size: 30px;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .top-panel {
+    background-position: center 17px;
+    background-size: auto 90%;
+
+    .title {
+      width: 100%;
+      font-size: 45px;
+    }
+
+    .subtitle {
+      margin-top: 110px;
+      width: 300px;
+    }
+
+    .social-links {
+      margin-top: 15px;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .top-panel {
+    .title {
+      margin-top: 30px;
+    }
+
+    .subtitle {
+      margin-top: 130px;
+    }
+  }
+}
+
+.home-tiles {
+  margin: 15px -15px;
+
+  .tile {
+    padding: 15px;
+
+    .panel {
+      margin: 0;
+    }
+
+    .heading {
+      margin-top: 10px;
+    }
+  }
+}
