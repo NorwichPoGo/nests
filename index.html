@@ -23,8 +23,18 @@ css:
   <div class="col-xs-12 col-md-6 tile">
     <div class="panel panel-default">
       <div class="panel-body">
-        <h2 class="heading">Heading 1</h2>
-        <p>Lorem ipsum</p>
+        <div class="panel-left">
+          <a href="{{ site.data.routes.map }}" class="icon">
+            <img src="/assets/images/map_tile_icon.png" class="border">
+          </a>
+        </div>
+        <div class="panel-right">
+          <a href="{{ site.data.routes.map }}"><h2 class="heading">Gyms and Pokéstops</h2></a>
+          <div class="text">
+            <p>A map of all the gyms and pokéstops in and around Norwich.</p>
+            <p>With a search bar so you can find gyms and pokéstops mentioned on Discord or FaceBook.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -32,26 +42,37 @@ css:
   <div class="col-xs-12 col-md-6 tile">
     <div class="panel panel-default">
       <div class="panel-body">
-        <h2 class="heading">Heading 2</h2>
-        <p>Lorem ipsum</p>
+        <div class="panel-left">
+          <a href="{{ site.data.routes.nests }}" class="icon">
+            <img src="/assets/images/nests_tile_icon.png" class="border">
+          </a>
+        </div>
+        <div class="panel-right">
+          <a href="{{ site.data.routes.nests }}"><h2 class="heading">Nest Map</h2></a>
+          <div class="text">
+            <p>A map of all the reported nests around Norwich.</p>
+            <p>You can report nests on Discord, or by selecting a nest and clicking 'Add a Report'.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="col-xs-12 col-md-6 tile">
+  <div class="col-xs-12 col-md-6 col-md-offset-3 tile">
     <div class="panel panel-default">
       <div class="panel-body">
-        <h2 class="heading">Heading 3</h2>
-        <p>Lorem ipsum</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-xs-12 col-md-6 tile">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <h2 class="heading">Heading 4</h2>
-        <p>Lorem ipsum</p>
+        <div class="panel-left">
+          <a href="{{ site.data.routes.repo }}" target="_blank" class="icon">
+            <img src="/assets/images/github_tile_icon.png">
+          </a>
+        </div>
+        <div class="panel-right">
+          <a href="{{ site.data.routes.repo }}" target="_blank" ><h2 class="heading">GitHub</h2></a>
+          <div class="text">
+            <p>Check out the code that makes this site tick.</p>
+            <p>This is also the right place to report any bugs, issues or suggestions for the site.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
