@@ -4,3 +4,78 @@ title: Pokémon Go Norwich
 css:
   - /assets/css/home.css
 ---
+<div class="jumbotron top-panel">
+  <div class="row">
+    <h1 class="title">Welcome to Pokémon Go Norwich</h1>
+  </div>
+  <div class="row">
+    <h4 class="subtitle">The unoficial companion site for Pokémon Go in Norwich</h4>
+  </div>
+  <div class="row">
+    <ul class="list-inline social-links">
+      <li><a href="https://discord.gg/zqmpFJG" target="_blank" class="social-link" title="Join us on Discord"><i class="fab fa-discord"></i></a></li>
+      <li><a href="https://www.facebook.com/groups/1725206761053534/" target="_blank" class="social-link" title="Follow us on Facebook"><i class="fab fa-facebook"></i></a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="home-tiles">
+  <div class="col-xs-12 col-md-6 tile">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="panel-left">
+          <a href="{{ site.data.routes.map }}" class="icon">
+            <img src="/assets/images/map_tile_icon.png" class="border">
+          </a>
+        </div>
+        <div class="panel-right">
+          <a href="{{ site.data.routes.map }}"><h2 class="heading">Gyms and Pokéstops</h2></a>
+          <div class="text">
+            <p>A map of all the gyms and pokéstops in and around Norwich.</p>
+            <p>With a search bar so you can find gyms and pokéstops mentioned on Discord or FaceBook.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-md-6 tile">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="panel-left">
+          <a href="{{ site.data.routes.nests }}" class="icon">
+            <img src="/assets/images/nests_tile_icon.png" class="border">
+          </a>
+        </div>
+        <div class="panel-right">
+          <a href="{{ site.data.routes.nests }}"><h2 class="heading">Nest Map</h2></a>
+          <div class="text">
+            <p>A map of all the reported nests around Norwich.</p>
+            <p>You can report nests on Discord, or by selecting a nest and clicking 'Add a Report'.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-md-6 col-md-offset-3 tile">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="panel-left">
+          <a href="{{ site.data.routes.repo }}" target="_blank" class="icon">
+            <img src="/assets/images/github_tile_icon.png">
+          </a>
+        </div>
+        <div class="panel-right">
+          <a href="{{ site.data.routes.repo }}" target="_blank" ><h2 class="heading">GitHub</h2></a>
+          <div class="text">
+            <p>Check out the code that makes this site tick.</p>
+            <p>This is also the right place to report any bugs, issues or suggestions for the site.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix"></div>
+</div>

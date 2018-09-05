@@ -7,21 +7,3 @@ html, body {
 @import "navbar";
 @import "footer";
 @import "cookie_notice";
-
-body {
-  padding-top: $navbar-height;
-}
-
-.container {
-  min-height: calc(100% - #{$footer-height});
-}
-
-@media (min-width: 768px) {
-  body {
-    padding-top: $navbar-height-large;
-  }
-
-  .container {
-    min-height: calc(100% - #{$footer-height-large});
-  }
-}

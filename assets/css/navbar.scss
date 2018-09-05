@@ -1,6 +1,12 @@
 $navbar-height: 50px;
 $navbar-height-large: 60px;
 
+.navbar {
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 0;
+}
+
 .navbar-inverse {
   .navbar-brand {
     color: #eee;

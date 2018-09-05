@@ -2,3 +2,173 @@
 ---
 
 @import "main";
+@import "navbar";
+
+.top-panel {
+  text-align: center;
+  background: url(/assets/images/pokeball.png) no-repeat, #f3f3f3;
+  background-position: center 62px;
+  background-size: auto 240px;
+  min-height: 365px;
+
+  .title {
+    display: inline-block;
+    margin: 0 auto;
+    width: 225px;
+  }
+
+  .subtitle {
+    display: inline-block;
+    margin: 65px auto 0 auto;
+    width: 225px;
+  }
+
+  .social-links {
+    margin-top: 40px;
+    margin-bottom: 0;
+
+    li {
+      font-size: 30px;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .top-panel {
+    background-position: center 17px;
+    background-size: auto 90%;
+
+    .title {
+      width: 100%;
+      font-size: 45px;
+    }
+
+    .subtitle {
+      margin-top: 110px;
+      width: 300px;
+    }
+
+    .social-links {
+      margin-top: 15px;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .top-panel {
+    .title {
+      margin-top: 30px;
+    }
+
+    .subtitle {
+      margin-top: 130px;
+    }
+  }
+}
+
+$icon-height: 82px;
+$tile-height-large: 185px;
+
+.home-tiles {
+  margin: 15px -15px;
+
+  .tile {
+    .panel {
+      margin: 15px 0;
+    }
+
+    .panel-body {
+      padding: 0;
+    }
+
+    .panel-left {
+      margin: 0 auto;
+      background-color: #f3f3f3;
+    }
+
+    .panel-right {
+      padding: 15px;
+    }
+
+    .icon {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+
+      img {
+        max-width: $icon-height;
+        max-height: $icon-height;
+      }
+
+      .border {
+        border: 1px solid #ddd;
+      }
+    }
+
+    .heading {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    a {
+      color: initial;
+    }
+
+    a:hover,
+    a:focus {
+      color: #777;
+      text-decoration: none;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .home-tiles {
+    .tile {
+      .panel-body {
+        height: $tile-height-large;
+      }
+
+      .panel-left,
+      .panel-right {
+        display: inline-block;
+        height: 100%;
+      }
+
+      .panel-left {
+        width: calc(#{$icon-height} + 30px + 1px);
+        border-right: 1px solid #ddd;
+      }
+
+      .panel-right {
+        width: calc(100% - #{$icon-height} - 30px - 1px);
+        padding: 15px;
+        float: right;
+      }
+
+      .icon {
+        display: block;
+        width: 100%;
+        height: 100%;
+
+        img {
+          display: block;
+          position: absolute;
+          top: 50%;
+          transform: translate(0, -50%);
+        }
+      }
+
+      .heading {
+        text-align: initial;
+      }
+    }
+  }
+}
